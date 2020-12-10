@@ -1,0 +1,245 @@
+body{
+  overflow-x: hidden;
+  padding: 0;
+  margin: 0;
+}
+html{
+  padding: 0;
+  margin: 0;
+}
+.dialog{
+  z-index: 999;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #f4f4f6;
+}
+
+.dialog-header{
+  box-shadow: 10px 10px 10px rgba(0,0,0,0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 45px;
+  background: #fff;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  z-index: 100;
+}
+
+.dialog-header .span-title{
+  top: 10px;
+  left: 49%;
+  transform: translateX(-49%);
+  position: absolute;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.patch-1{
+  height: 60px;
+}
+.dialogueItem{
+  margin-top: 10px;
+  font-size: 16px;
+  background: #f4f4f6;
+}
+.patch-2{
+  height: 90px;
+  background: #f4f4f6;
+}
+.dialogue{
+  margin-top: 10px;
+  font-size: 16px;
+  background: #f4f4f6;
+}
+
+.dialogue .time{
+  margin: 7px 0;
+  text-align: center;
+}
+
+.dialogue .time span{
+  display: inline-block;
+  padding: 0 18px;
+  font-size: 12px;
+  color: #fff;
+  border-radius: 2px;
+  background-color: #dcdcdc;
+}
+
+.dialogueCon{
+  color: rgba(0, 0, 0, 0.87);
+  display: flex;
+  padding: 16px;
+  position: relative;
+}
+.dialogueConF{
+  padding-left: 72px;
+}
+.dialogueConS{
+  padding-right: 56px;
+}
+.dialogueCon-left{
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 10px;
+  left: 16px;
+  max-height: 72px;
+  display: flex;
+  align-items: center;
+  border-radius: 20px;
+  background-color: #bdbdbd;
+}
+.dialogueCon-right{
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 10px;
+  max-height: 72px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  border-radius: 20px;
+  background-color: #bdbdbd;
+}
+
+.dialogueCon-left > img, .dialogueCon-right > img{
+  width: 40px;
+  height: 40px;
+}
+.dialogueCon-center{
+  width: 100%;
+}
+.dialogueCon-center > .friend{
+  border-radius: 4px;
+  position: relative;
+  padding: 0 10px;
+  min-height: 20px;
+  line-height: 2;
+  font-size: 14px;
+  text-align: left;
+  background-color: #e0e0e0;
+  word-break: break-all;
+}
+.dialogueCon-center > .friend::before{
+  content: " ";
+  position: absolute;
+  top: 9px;
+  right: 100%;
+  border: 6px solid transparent;
+  border-right-color: #e0e0e0;
+}
+
+.dialogueCon-center > .self{
+  float: right;
+  margin-right: 13px;
+  border-radius: 4px;
+  position: relative;
+  padding: 0 10px;
+  min-height: 20px;
+  line-height: 2;
+  font-size: 14px;
+  text-align: left;
+  background-color: #b2e281;
+  word-break: break-all;
+}
+.dialogueCon-center > .self:before {
+  content: " ";
+  position: absolute;
+  top: 9px;
+  left: 100%;
+  border: 6px solid transparent;
+  border-left-color: #b2e281;
+}
+.help_question-span{
+  color: orange;
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  padding: 0 20px;
+  min-height: 20px;
+  line-height: 2;
+  font-size: 14px;
+  text-align: left;
+  word-break: break-all;
+  top:5px;
+  background:transparent url('../../../static/images/anwer.png') no-repeat left center;
+  background-size:16px;
+  border-bottom:1px solid orange;
+}
+/*导诊*/
+.guidanceDiv{
+  position: fixed;
+  right: 5%;
+  bottom: 10%;
+}
+.guidance{
+  display: flex;
+  flex-direction: row;
+  background-color: #e0e0e0;
+  border-radius: 16px;
+  padding: 0 5px 0 10px;
+}
+.guidance > .guidanceCon{
+  color: rgba(0, 0, 0, 0.87);
+}
+.guidance > .guidanceCon > .guidanceGo{
+  color: #007aff;
+}
+.guidance .closeImg{
+  display: block;
+  width: 25px;
+  height: 25px;
+}
+.guidanceAdd{
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  right: 5%;
+  bottom: 10%;
+}
+.guidanceAdd > img{
+  width: 30px;
+  height: 30px;
+}
+/*底部输入框*/
+.dialogueFooter{
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  text-align: center;
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+}
+.footer-input{
+  flex: 1;
+}
+.footer-input input{
+  width: 100%;
+  height: 35px;
+  border: none;
+  font-size: 16px;
+}
+.footer-input input:focus{
+  outline: none;
+}
+.footer-button{
+  width: 90px;
+  height: 36px;
+  background-color: #2196f3;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+

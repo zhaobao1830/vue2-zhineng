@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>症状导诊</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no"/>
+  <link rel="stylesheet" href="intelligentHtml.css">
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.css">
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+</head>
+<body>
+  <div class="intelligent" id="intelligent">
+    <div class="intelligent-header">
+      <img class="goBackImg" src="../../../static/images/ic_back_grey.png" style="width:24px;height:24px" @click="window.history.back()"/>
+      <span class="span-title">症状导诊</span>
+    </div>
+    <div class="sidenav">
+      <div class="sidenav-left">
+        <div class="title">人体部位</div>
+        <ul class="iu-table-view iu-table-view-inverted" style="color: #ddd;" id="part">
+          <li class="iu-table-view-cell"
+              v-for="(part_item, index) in part_data"
+              :key="index"
+              @click="getSidenavRight(part_item.part_code, 1)"
+          >
+            <span class="iu-table-view-cell-span" :name="part_item.part_code">{{part_item.part_name}} <i></i></span>
+          </li>
+        </ul>
+      </div>
+      <div class="sidenav-right" @touchstart="touchstart">
+        <div class="bar">
+          <input type="text" class="find-disease" v-model="searchString" placeholder="请输入疾病" @keyup.enter="get_search_data"/>
+        </div>
+        <div v-show="ifSearchData === true" class="page-item">第{{page}}页&nbsp;&nbsp;共{{page_size}}页</div>
+        <div v-show="ifSearchData === true" class="dis-data">
+          <ul class="iu-table-view-ui">
+            <li
+              v-show="page > 1"
+              class="iu-table-view-cell"
+              @click="goPrePage"
+            >
+              <a>上一页</a>
+            </li>
+            <li
+              class="iu-table-view-cell"
+              v-for="dis in disease_data"
+            >
+              <span>{{dis.disease_name}}</span>
+            </li>
+            <li
+              v-show="page < page_size"
+              class="iu-table-view-cell"
+              @click="goNextPage"
+            >
+              <a>下一页</a>
+            </li>
+          </ul>
+        </div>
+        <div v-show="ifSearchData === false" class="search-item">暂无您搜索的疾病</div>
+      </div>
+    </div>
+    <div class="in-content">
+      <div style="padding: 10px 80px;">
+        <div id="segmentedControl" class="in-segmented-control">
+          <a class="in-control-item" :class="{'in-active': controlItemId === 1}" @click="changeControlShow(1)">男性</a>
+          <a class="in-control-item" :class="{'in-active': controlItemId === 2}" @click="changeControlShow(2)">女性</a>
+          <a class="in-control-item" :class="{'in-active': controlItemId === 3}" @click="changeControlShow(3)">儿童</a>
+        </div>
+      </div>
+      <div>
+        <div id="item1" class="control-content" :class="{'control-content-active': controlItemId === 1}" @click="getParts(1)">
+          <div class="swiper-container" id="swiper-1">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide" @click="manclick">
+                <div class="person-front" @click="onfront">
+                  <div class="m-head" @click="onfhead">
+                    <div class="m-big-head"></div>
+                    <div class="m-big-ear"></div>
+                    <div class="m-big-eyes"></div>
+                    <div class="m-big-nose"></div>
+                    <div class="m-big-mouth"></div>
+                  </div>
+                  <div class="m-face"></div>
+                  <div class="m-neck"></div>
+                  <div class="m-left-arm"></div>
+                  <div class="m-right-arm"></div>
+                  <div class="m-belly"></div>
+                  <div class="m-chest"></div>
+                  <div class="m-middle" ></div>
+                  <div class="m-left-leg"></div>
+                  <div class="m-right-leg"></div>
+                </div>
+              </div>
+              <div class="swiper-slide" @click="manclick">
+                <div class="person-back" @click="onback">
+                  <div class="m-back-neck"></div>
+                  <div class="m-back-left-arm"></div>
+                  <div class="m-back-right-arm"></div>
+                  <div class="m-back"></div>
+                  <div class="m-back-belly"></div>
+                  <div class="m-back-pelvis"></div>
+                  <div class="m-back-middle"></div>
+                  <div class="m-back-leg"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="item2" class="control-content" :class="{'control-content-active': controlItemId === 2}" @click="getParts(2)">
+          <div class="swiper-container" id="swiper-2">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide" @click="womanclick">
+                <div class="female-front" @click="onfemale">
+                  <div class="f-head" @click="onghead">
+                    <div class="f-big-head"></div>
+                    <div class="f-big-face"></div>
+                    <div class="f-big-ear"></div>
+                    <div class="f-big-eyes"></div>
+                    <div class="f-big-nose"></div>
+                    <div class="f-big-mouth"></div>
+                  </div>
+                  <div class="f-face"></div>
+                  <div class="f-neck"></div>
+                  <div class="f-left-arm"></div>
+                  <div class="f-right-arm"></div>
+                  <div class="f-chest"></div>
+                  <div class="f-belly"></div>
+                  <div class="f-middle"></div>
+                  <div class="f-left-leg"></div>
+                  <div class="f-right-leg"></div>
+                </div>
+              </div>
+              <div class="swiper-slide" @click="womanclick">
+                <div class="female-back" @click="onfback">
+                  <div class="f-back-left-arm"></div>
+                  <div class="f-back-right-arm"></div>
+                  <div class="f-back"></div>
+                  <div class="f-back-bone"></div>
+                  <div class="f-back-lion"></div>
+                  <div class="f-back-pelvis"></div>
+                  <div class="f-back-hip"></div>
+                  <div class="f-back-leg"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="item3" class="control-content" :class="{'control-content-active': controlItemId === 3}" @click="getParts(3)">
+          <div class="swiper-container" id="swiper-3">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide" @click="childclick">
+                <div class="children-front" @click="oncmale">
+                  <div class="c-head" @click="onchead">
+                    <div class="c-big-head"></div>
+                    <div class="c-big-face"></div>
+                    <div class="c-big-ear"></div>
+                    <div class="c-big-eyes"></div>
+                    <div class="c-big-nose"></div>
+                    <div class="c-big-mouth"></div>
+                  </div>
+                  <div class="c-neck"></div>
+                  <div class="c-left-arm"></div>
+                  <div class="c-right-arm"></div>
+                  <div class="c-chest"></div>
+                  <div class="c-belly"></div>
+                  <div class="c-middle"></div>
+                  <div class="c-left-leg"></div>
+                  <div class="c-right-leg"></div>
+                </div>
+              </div>
+              <div class="swiper-slide" @click="childclick">
+                <div class="children-back" @click="oncback">
+                  <div class="c-back-bone"></div>
+                  <div class="c-back-arm"></div>
+                  <div class="c-back-arm-right"></div>
+                  <div class="c-back-buttocks"></div>
+                  <div class="c-back-loins"></div>
+                  <div class="c-back-leg"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="detailsDialog">
+      <div class="detailsDialog-con">
+        <div class="detailsDialog-body">
+          <div class="detailsDialog-card">
+            <div class="card-media">
+              <img src="./images/card_bg.jpg"/>
+              <div class="card-title-sub-title">
+                <div class="card-title">臂丛神经损伤</div>
+                <div class="card-sub-title">疾病详情</div>
+              </div>
+            </div>
+            <div class="card-content">
+              <div class="card-text">
+                <div class="card-text-con">
+                  臂丛神经损伤,熟悉一下：臂丛神经损伤(brachialplexus)是周围神经损伤的一个常见类型主要表现以肩胛带肌为主的疼痛、无力和肌萎缩。
+                  臂丛损伤也见于肩颈部枪弹，弹片炸伤等火器性贯通伤或盲管伤，刀刺伤，玻璃切割伤，药物性损伤及手术误伤等等，此类损伤多较局限，
+                  但损伤程度较严重，多为神经根干部断裂，可伴有锁骨下，腋动静脉等损伤，锁骨骨折，肩关节前脱位，颈肋，前斜角肌综合征，
+                  原发性或转移至臂丛附近的肿瘤也可压迫损伤臂丛神经。
+                </div>
+              </div>
+              <div class="card-actions">
+                <span class="ask">去问小智</span>
+                <span class="goDepartment">相关科室</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="detailsDialog-action">
+          <span>关闭</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="application/javascript" src="../../js/3.5.1.jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://unpkg.com/swiper/swiper-bundle.js"> </script>
+  <script>
+    $(function () {
+      const url = 'http://122.112.148.65:9005'
+      let vm = new Vue({
+        el: '#intelligent',
+        data: {
+          controlItemId: 1, // 1(男性), 2(女性), 3(儿童)
+          part_data: [],
+          part_code: '',
+          floatX:0,
+          floatY:0,
+          searchString: '',
+          disease_data: [],
+          page: 1,
+          page_size: 0,
+          ifSearchData: false,
+          dialogShow: false,
+          dialogName: ''
+        },
+        created() {
+          this.getParts(1)
+          this.phoneFlag()
+        },
+        mounted(){
+          let swiper = new Swiper('#swiper-1', {
+            effect: 'cube',
+            grabCursor: true,
+            cubeEffect: {
+              shadow: false,
+            },
+            observer: true,
+            observeParents: true,
+            navigation: {
+              nextEl: '.swiper-button-next',
+              prevEl: '.swiper-button-prev',
+            }
+          });
+          let swipers = new Swiper('#swiper-2', {
+            effect: 'cube',
+            grabCursor: true,
+            cubeEffect: {
+              shadow: false,
+            },
+            observer: true,
+            observeParents: true,
+            navigation: {
+              nextEl: '.swiper-button-next',
+              prevEl: '.swiper-button-prev',
+            }
+          });
+          let swiperse = new Swiper('#swiper-3', {
+            effect: 'cube',
+            grabCursor: true,
+            cubeEffect: {
+              shadow: false,
+            },
+            observer: true,
+            observeParents: true,
+            navigation: {
+              nextEl: '.swiper-button-next',
+              prevEl: '.swiper-button-prev',
+            }
+          });
+        },
+        methods: {
+          phoneFlag() {
+            let ua = navigator.userAgent.toLowerCase();
+            let isAndroid = ua.indexOf('android') > -1;
+            if(isAndroid){
+              this.floatX = 20
+              this.floatY = 40
+            }else{
+              this.floatX = 0
+              this.floatY = 0
+            }
+          },
+          getParts(x) {
+            axios.get(url + '/getParts', {
+              params: {
+                sex: x
+              }
+            }).then(res => {
+              this.part_data = res.data.data
+            })
+          },
+          // 切换显示类型
+          changeControlShow(num) {
+            this.controlItemId = num
+            this.getParts(num)
+          },
+          manclick(e){
+            const obj = $(e.target)
+            const fhead = $('.m-head')
+            if(obj[0].className === "swiper-slide swiper-slide-active"){
+              this.tapHide()
+              fhead.fadeOut().children().fadeOut();
+            }
+          },
+          onfront(e){
+            let that = this
+            let obj = $(e.target)
+            let fhead = $('.m-head')
+            let containX = e.clientX - obj.offset().left - that.floatX;
+            let containY = e.clientY - obj.offset().top ;
+            that.searchString = ""
+            if((103 < containX) && (containX < 156) && (1 < containY) && (containY < 70)){
+              fhead.fadeIn().siblings().fadeOut();
+            }else if((106 < containX) && (containX < 147) && (70 < containY) && (containY < 98)){
+              if(fhead.css('display') === 'none'){
+                obj.children('.m-neck').fadeIn().siblings().fadeOut();
+                obj.children('.m-neck').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('颈部')
+                }, 250);
+              }
+            }else if((0 < containX) && (containX < 88) && (84 < containY) && (containY < 290) && ((-2.37 * containX + 292.42) < (containY + 30)) && ((-2.37 * containX + 292.42) > (containY - 30))){
+              if(fhead.css('display') === 'none'){
+                obj.children('.m-right-arm').fadeIn().siblings().fadeOut();
+                obj.children('.m-right-arm').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('上肢')
+                }, 250);
+              }
+            }else if((169 < containX) && (containX < 253) && (86 < containY) && (containY < 296) && ((2.47 * containX - 331.14) < (containY + 30)) && ((2.47 * containX - 331.14) > (containY - 30))){
+              if(fhead.css('display') === 'none'){
+                obj.children('.m-left-arm').fadeIn().siblings().fadeOut();
+                obj.children('.m-left-arm').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('上肢')
+                }, 250);
+              }
+            }else if((89 < containX) && (containX < 164) && (101 < containY) && (containY < 156)){
+              if(fhead.css('display') === 'none'){
+                obj.children('.m-chest').fadeIn().siblings().fadeOut();
+                obj.children('.m-chest').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('胸部')
+                }, 250);
+              }
+            }else if((88 < containX) && (containX < 166) && (156 < containY) && (containY < 225)){
+              if(fhead.css('display') === 'none'){
+                obj.children('.m-belly').fadeIn().siblings().fadeOut();
+                obj.children('.m-belly').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('腹部')
+                }, 250);
+              }
+            }else if((80 < containX) && (containX < 172) && (233 < containY) && (containY < 261)){
+              if(fhead.css('display') === 'none'){
+                obj.children('.m-middle').fadeIn().siblings().fadeOut();
+                obj.children('.m-middle').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('生殖部位')
+                }, 250);
+              }
+            }else if((148 < containX) && (containX < 175) && (270 < containY) && (containY < 538)){
+              if(fhead.css('display') === 'none'){
+                obj.children('.m-left-leg').fadeIn().siblings().fadeOut();
+                obj.children('.m-left-leg').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('下肢')
+                }, 250);
+              }
+            }else if((83 < containX) && (containX < 112) && (270 < containY) && (containY < 538)){
+              if(fhead.css('display') === 'none'){
+                obj.children('.m-right-leg').fadeIn().siblings().fadeOut();
+                obj.children('.m-right-leg').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('下肢')
+                }, 250);
+              }
+            }else{
+              if(fhead.css('display') === 'none'){
+                that.tapHide();
+                obj.children().fadeOut().children().fadeOut();
+              }
+            }
+          },
+          onfhead(e){
+            let that = this
+            const obj = $(e.target)
+            const containX = e.clientX  - obj.offset().left;
+            const containY = e.clientY - obj.offset().top -that.floatX;
+            that.searchString = ""
+            if((43 < containX) && (containX < 215) && (43 < containY) && (containY < 107)){
+              obj.children('.m-big-head').fadeIn().siblings().fadeOut();
+              obj.children('.m-big-head').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('头部')
+              }, 250);
+            }else if((30 < containX) && (containX < 56) && (158 < containY) && (containY < 235)){
+              obj.children('.m-big-ear').fadeIn().siblings().fadeOut();
+              obj.children('.m-big-ear').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('耳')
+              }, 250);
+            }else if((196 < containX) && (containX < 235) && (158 < containY) && (containY < 235)){
+              obj.children('.m-big-ear').fadeIn().siblings().fadeOut();
+              obj.children('.m-big-ear').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('耳')
+              }, 250);
+            }else if((106 < containX) && (containX < 138) && (170 < containY) && (containY < 205)){
+              obj.children('.m-big-nose').fadeIn().siblings().fadeOut();
+              obj.children('.m-big-nose').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('鼻')
+              }, 250);
+            }else if((50 < containX) && (containX < 200) && (149 < containY) && (containY < 162)){
+              obj.children('.m-big-eyes').fadeIn().siblings().fadeOut();
+              obj.children('.m-big-eyes').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('眼')
+              }, 250);
+            }else if((56 < containX) && (containX < 188) && (218 < containY) && (containY < 240)){
+              obj.children('.m-big-mouth').fadeIn().siblings().fadeOut();
+              obj.children('.m-big-mouth').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('口')
+              }, 250);
+            }else if((57 < containX) && (containX < 209) && (107 < containY) && (containY < 307)){
+            }else{
+              that.tapHide();
+              obj.fadeOut().children().fadeOut();
+            }
+          },
+          childclick() {},
+          oncback() {},
+          womanclick() {},
+          onfemale() {},
+          oncmale() {},
+          onchead() {},
+          onfback() {},
+          onghead() {},
+          onback() {},
+          tapHide(){
+            $('.sidenav').css('width','0');
+            $('.in-content').css('margin-left','0')
+          },
+          taparr(){
+            if($('.sidenav')[0].clientWidth === 0){
+              return false
+            }else{
+              return true
+            }
+          },
+          tapMenu(x){
+            let that = this
+            $('.sidenav').css('width','70vw')
+            $('.in-content').css('margin-left','70vw');
+            const currentPartData = this.part_data.find((item) => {
+              return item.part_name === x
+            })
+            this.part_code = currentPartData.part_code.join(',')
+            this.page = 1
+            that.partCode(this.part_code, this.controlItemId, this.page)
+          },
+          partCode(part_code, sex, page){
+            this.part_code = part_code
+            axios.get(url + '/getSymptomByBody', {
+              params: {
+                bodyCode: this.part_code,
+                sex: sex,
+                page: page
+              }
+            }).then(res => {
+              if(res.data.data.length === 0){
+                this.ifSearchData = false
+              } else {
+                this.ifSearchData = true
+                this.disease_data = res.data.data
+                this.page_size = res.data.page_size
+              }
+            })
+          },
+          touchstart(e){
+            this.startY = e.changedTouches[0].pageY
+          },
+          get_search_data(){
+            this.page = 1
+            if(this.searchString === ""){
+              axios.get(url + '/getSymptomByBody', {
+                params: {
+                  bodyCode: this.part_code,
+                  sex: this.controlItemId,
+                  page: this.page
+                }
+              }).then(res => {
+                if(res.data.data.length === 0){
+                  this.ifSearchData = false
+                } else {
+                  this.ifSearchData = true
+                  this.disease_data = res.data.data
+                  this.page_size = res.data.page_size
+                }
+              })
+            }else{
+              axios.get(url + '/getSymptomByBody', {
+                params: {
+                  bodyCode: this.part_code,
+                  sex: this.controlItemId,
+                  filter: this.searchString
+                }
+              }).then(res => {
+                if(res.data.data.length === 0){
+                  this.ifSearchData = false
+                } else {
+                  this.ifSearchData = true
+                  this.disease_data = res.data.data
+                  this.page_size = res.data.page_size
+                }
+              })
+            }
+          },
+          goPrePage() {
+            this.page = this.page - 1
+            if(this.searchString === "") {
+              axios.get(url + '/getSymptomByBody', {
+                params: {
+                  bodyCode: this.part_code,
+                  sex: this.controlItemId,
+                  page: this.page
+                }
+              }).then(res => {
+                if (res.data.data.length === 0) {
+                  this.ifSearchData = false
+                } else {
+                  this.ifSearchData = true
+                  this.disease_data = res.data.data
+                  this.page_size = res.data.page_size
+                }
+              })
+            }
+          },
+          goNextPage() {
+            this.page = this.page + 1
+            if(this.searchString === "") {
+              axios.get(url + '/getSymptomByBody', {
+                params: {
+                  bodyCode: this.part_code,
+                  sex: this.controlItemId,
+                  page: this.page
+                }
+              }).then(res => {
+                if (res.data.data.length === 0) {
+                  this.ifSearchData = false
+                } else {
+                  this.ifSearchData = true
+                  this.disease_data = res.data.data
+                  this.page_size = res.data.page_size
+                }
+              })
+            }
+          },
+          // 点击左侧列表，获取右侧数据
+          getSidenavRight(code, page) {
+            this.partCode(code.join(","), this.controlItemId, page)
+          }
+        }
+      })
+    })
+  </script>
+</body>
+</html>

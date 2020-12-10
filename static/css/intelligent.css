@@ -1,0 +1,488 @@
+body{
+	overflow-x: hidden;
+	background: #fff;
+}
+.mobile{
+	float: left; 
+	position: relative;
+	overflow: hidden;
+	margin-top:50px
+}
+.sidenav{
+	position:absolute;
+	top:0;
+	left:0;
+	bottom:0;
+	width:0;
+	background: #323c3c; 
+	transition: all 0.25s; 
+	overflow: hidden;
+	color:#eee;
+	font-size:14px;
+}
+.sidenav-left{
+	display:block;
+	float:left;
+	width:29vw;
+	height:100%;
+	overflow-x: hidden;
+}
+.deep{
+	background: #2c3535;
+}
+.sidenav-right{
+	overflow-x: hidden;
+	display:block;
+	float:right;
+	width:41vw;
+	height:100%;
+	background: #2c3535; 
+}
+.title{
+	position:relative;
+	padding:35px 10px;
+	overflow:hidden;
+}
+.mui-table-view-inverted{
+	background: transparent;
+}
+.mui-table-view-inverted:before,.mui-table-view-inverted:after{
+	background-color:#2c2c2d
+}
+.mui-table-view-chevron{
+	background: transparent;	 
+}
+.mui-table-view-cell.mui-collapse .mui-table-view .mui-table-view-cell{
+	padding-left:15px
+}
+.mui-table-view-inverted .mui-table-view-cell:after{
+	left:0
+}
+.mui-table-view-cell.mui-collapse .mui-table-view .mui-table-view-cell:after{
+	left:0
+}
+.mui-navigate-right:after, .mui-push-right:after{
+	right:12px
+}
+.mui-table-view-cell.mui-collapse .mui-table-view .mui-table-view-cell:after {
+	background-color: #555
+}
+.mui-table-view-chevron .mui-table-view-cell {
+    padding-right: 0;
+}
+.mui-table-view-chevron .mui-table-view-cell > a:not(.mui-btn) {
+    margin-right: 0;
+}
+/* .swiper-button-next{
+	background:url(../images/left_arrow.png) no-repeat;
+	background-size: contain;
+}
+.swiper-button-prev{
+	background:url(../images/right_arrow.png) no-repeat;
+	background-size: contain;
+} */
+.female-front,.female-back,.children-front,.children-back{
+	width:300px;
+	height:636px;
+	position:relative;
+	margin:0 auto;
+}
+.person-front,.person-back{
+	width:270px;
+	height:636px;
+	position:relative;
+	margin:0 auto;
+}
+.person-front{
+	background: url(../images/man.png) no-repeat;
+	background-size: contain;
+}
+.person-back{
+	background: url(../images/man_back.png) no-repeat;
+	background-size: contain;
+}
+.female-front{
+	background: url(../images/woman.png) no-repeat;
+	background-size: contain;	
+}
+.female-back{
+	background: url(../images/woman_back.png) no-repeat;
+	background-size: contain;		
+}
+.children-front{
+	background: url(../images/child.png) no-repeat;
+	background-size: contain;		
+}
+.children-back{
+	background: url(../images/child_back.png) no-repeat;
+	background-size: contain;		
+}
+.m-head,.m-face,.m-neck,.m-left-arm,.m-right-arm,.m-belly,.m-chest,.m-middle,.m-left-leg,.m-right-leg,.m-back-neck,.m-back-left-arm,.m-back-right-arm,.m-back,.m-back-belly,.m-back-pelvis,.m-back-middle,.m-big-head,.m-big-face,.m-big-ear,.m-big-eyes,.m-big-nose,.m-big-mouth,.m-back-leg{
+	width:270px;
+	height:600px;
+	position:absolute;
+	left:0;
+	top:0;
+	display:none;
+}
+.m-head{
+	background: url(../images/diagnos_man_big_head.png);
+	background-size: contain;	
+	z-index:1;
+}
+.m-face{
+	background: url(../images/diagnose_man_face.png);
+	background-size: contain;	
+	z-index:2;	
+}
+.m-neck{
+	background: url(../images/diagnose_man_neck.png);
+	background-size: contain;	
+	z-index:3;
+}
+.m-left-arm{
+	background: url(../images/diagnose_man_left_arm.png);
+	background-size: contain;	
+	z-index:4;	
+}
+.m-right-arm{
+	background: url(../images/diagnose_man_right_arm.png);
+	background-size: contain;	
+	z-index:5;	
+}
+.m-chest{
+	background: url(../images/diagnose_man_chest.png);
+	background-size: contain;	
+	z-index:6;	
+}
+.m-belly{
+	background: url(../images/diagnose_man_belly.png);
+	background-size: contain;	
+	z-index:7;
+}
+.m-middle{
+	background: url(../images/diagnose_man_middle.png);
+	background-size: contain;	
+	z-index:8;
+}
+.m-left-leg{
+	background: url(../images/diagnose_man_left_leg.png);
+	background-size: contain;	
+	z-index:9;	
+}
+.m-right-leg{
+	background: url(../images/diagnose_man_right_leg.png);
+	background-size: contain;	
+	z-index:10;		
+}
+.m-back-neck{
+	background: url(../images/diagnose_man_back_neck.png);
+	background-size: contain;	
+	z-index:1;
+}
+.m-back-left-arm{
+	background: url(../images/diagnose_man_back_left_arm.png);
+	background-size: contain;	
+	z-index:2;
+}
+.m-back-right-arm{
+	background: url(../images/diagnose_man_back_right_arm.png);
+	background-size: contain;	
+	z-index:2;
+}
+.m-back{
+	background: url(../images/diagnose_man__back.png);
+	background-size: contain;	
+	z-index:3;
+}
+.m-back-belly{
+	background: url(../images/diagnose_man_back_belly.png);
+	background-size: contain;	
+	z-index:4;	
+}
+.m-back-pelvis{
+	background: url(../images/diagnose_man_back_pelvis.png);
+	background-size: contain;	
+	z-index:5;	
+}
+.m-back-middle{
+	background: url(../images/diagnose_man_back_middle.png);
+	background-size: contain;	
+	z-index:6;
+}
+.m-back-leg{
+	background: url(../images/diagnose_man_back_legs.png);
+	background-size: contain;	
+	z-index:6;
+}
+.m-big-head{
+	background: url(../images/diagnose_man_big_top.png);
+	background-size: contain;	
+	z-index:9;
+}
+.m-big-face{
+	background: url(../images/diagnose_man_big_face.png);
+	background-size: contain;	
+	z-index:10;
+}
+.m-big-ear{
+	background: url(../images/diagnose_man_ear.png);
+	background-size: contain;	
+	z-index:11;	
+}
+.m-big-eyes{
+	background: url(../images/diagnose_man_eyes.png);
+	background-size: contain;	
+	z-index:11;	
+}
+.m-big-nose{
+	background: url(../images/diagnose_man_nose.png);
+	background-size: contain;	
+	z-index:11;	
+}
+.m-big-mouth{
+	background: url(../images/diagnose_man_mouth.png);
+	background-size: contain;	
+	z-index:11;
+}
+.f-head,.f-face,.f-neck,.f-left-arm,.f-right-arm,.f-chest,.f-belly,.f-middle,.f-left-leg,.f-right-leg,.f-back-left-arm,.f-back-right-arm,.f-back,.f-back-bone,.f-back-lion,.f-back-pelvis,.f-back-hip,.f-back-leg,.f-big-head,.f-big-face,.f-big-ear,.f-big-eyes,.f-big-nose,.f-big-mouth{
+	width:300px;
+	height:550px;
+	position:absolute;
+	left:0;
+	top:0;
+	display:none;	
+}
+.f-head{
+	background: url(../images/woman_big_head.png);
+	background-size: contain;	
+	z-index:1;
+}
+.f-face{
+	background: url(../images/diagnose_woman_face.png);
+	background-size: contain;	
+	z-index:2;	
+}
+.f-neck{
+	background: url(../images/diagnose_woman_neck.png);
+	background-size: contain;	
+	z-index:3;
+}
+.f-left-arm{
+	background: url(../images/diagnose_woman_leftarm.png);
+	background-size: contain;	
+	z-index:4;	
+}
+.f-right-arm{
+	background: url(../images/diagnose_woman_right_arm.png);
+	background-size: contain;	
+	z-index:5;
+}
+.f-chest{
+	background: url(../images/diagnose_woman_chest.png);
+	background-size: contain;	
+	z-index:6;
+}
+.f-belly{
+	background: url(../images/diagnose_woman_belly.png);
+	background-size: contain;	
+	z-index:7;		
+}
+.f-middle{
+	background: url(../images/diagnose_woman_middle.png);
+	background-size: contain;	
+	z-index:8;	
+}
+.f-left-leg{
+	background: url(../images/diagnose_woman_left_leg.png);
+	background-size: contain;	
+	z-index:9;	
+}
+.f-right-leg{
+	background: url(../images/diagnose_woman_right_leg.png);
+	background-size: contain;	
+	z-index:10;		
+}
+.f-back-left-arm{
+	background: url(../images/diagnose_woman_back_left_arm.png);
+	background-size: contain;	
+	z-index:1;	
+}
+.f-back-right-arm{
+	background: url(../images/diagnose_woman_back_right-arm.png);
+	background-size: contain;
+	z-index:1;
+}
+.f-back{
+	background: url(../images/diagnose_woman_back.png);
+	background-size: contain;	
+	z-index:2;	
+}
+.f-back-bone{
+	background: url(../images/diagnose_woman_bone.png);
+	background-size: contain;	
+	z-index:3;	
+}
+.f-back-lion{
+	background: url(../images/diagnose_woman_lion.png);
+	background-size: contain;	
+	z-index:4;	
+}
+.f-back-pelvis{
+	background: url(../images/diagnose_woman_pelvis.png);
+	background-size: contain;	
+	z-index:5;	
+}
+.f-back-hip{
+	background: url(../images/diagnose_woman_hip.png);
+	background-size: contain;	
+	z-index:6;
+}
+.f-back-leg{
+	background: url(../images/diagnose_woman_back_legs.png);
+	background-size: contain;	
+	z-index:6;
+}
+.f-big-head{
+	background: url(../images/diagnose_woman_big_top.png);
+	background-size: contain;	
+	z-index:9;	
+}
+.f-big-face{
+	background: url(../images/diagnose_woman_big_face.png);
+	background-size: contain;	
+	z-index:10;	
+}
+.f-big-ear{
+	background: url(../images/diagnose_woman_big_ear.png);
+	background-size: contain;	
+	z-index:11;	
+}
+.f-big-eyes{
+	background: url(../images/diagnose_woman_big_eyes.png);
+	background-size: contain;	
+	z-index:11;	
+}
+.f-big-nose{
+	background: url(../images/diagnose_woman_big_nose.png);
+	background-size: contain;	
+	z-index:11;	
+}
+.f-big-mouth{
+	background: url(../images/diagnose_woman_big_mouth.png);
+	background-size: contain;	
+	z-index:11;	
+}
+.c-neck,.c-head,.c-left-arm,.c-right-arm,.c-chest,.c-belly,.c-middle,.c-right-leg,.c-left-leg,.c-big-head,.c-big-face,.c-big-ear,.c-big-eyes,.c-big-nose,.c-big-mouth,.c-back-bone,.c-back-arm,.c-back-arm-right,.c-back-buttocks,.c-back-loins,.c-back-leg{
+	width:300px;
+	height:636px;
+	position:absolute;
+	left:0;
+	top:0;
+	display:none;
+}
+.c-head{
+	background: url(../images/child_big_head.png);
+	background-size: contain;	
+	z-index:1;
+}
+.c-neck{
+	background: url(../images/diagnose_child_neck.png);
+	background-size: contain;	
+	z-index:2;
+}
+.c-left-arm{
+	background: url(../images/diagnose_child_right_arm.png);
+	background-size: contain;	
+	z-index:3;
+}
+.c-right-arm{
+	background: url(../images/diagnose_child_left_arm.png);
+	background-size: contain;	
+	z-index:4;	
+}
+.c-chest{
+	background: url(../images/diagnose_child_chest.png);
+	background-size: contain;	
+	z-index:5;	
+}
+.c-belly{
+	background: url(../images/diagnose_child_belly.png);
+	background-size: contain;	
+	z-index:6;		
+}
+.c-middle{
+	background: url(../images/diagnose_child_middle.png);
+	background-size: contain;	
+	z-index:7;	
+}
+.c-left-leg{
+	background: url(../images/diagnose_child_right_leg.png);
+	background-size: contain;	
+	z-index:8;	
+}
+.c-right-leg{
+	background: url(../images/diagnose_child_left_leg.png);
+	background-size: contain;	
+	z-index:9;	
+}
+.c-big-head{
+	background: url(../images/diagnose_child_big_head_select.png);
+	background-size: contain;	
+	z-index:10;	
+}
+.c-big-face{
+	background: url(../images/diagnose_child_big_face_select.png);
+	background-size: contain;	
+	z-index:11;		
+}
+.c-big-ear{
+	background: url(../images/diagnose_child_big_ear_select.png);
+	background-size: contain;	
+	z-index:11;	
+}
+.c-big-eyes{
+	background: url(../images/diagnose_child_big_eyes_select.png);
+	background-size: contain;	
+	z-index:11;	
+}
+.c-big-nose{
+	background: url(../images/diagnose_child_big_nose_select.png);
+	background-size: contain;	
+	z-index:11;	
+}
+.c-big-mouth{
+	background: url(../images/diagnose_child_big_mouth_select.png);
+	background-size: contain;	
+	z-index:11;	
+}
+.c-back-bone{
+	background: url(../images/diagnose_child_back.png);
+	background-size: contain;	
+	z-index:13;	
+}
+.c-back-arm{
+	background: url(../images/diagnose_child_back_left_arm.png);
+	background-size: contain;	
+	z-index:12;	
+}
+.c-back-arm-right{
+	background: url(../images/diagnose_child_back_right-arms_select.png);
+	background-size: contain;	
+	z-index:12;	
+}
+.c-back-buttocks{
+	background: url(../images/diagnose_child_back_buttocks_select.png);
+	background-size: contain;	
+	z-index:12;	
+}
+.c-back-loins{
+	background: url(../images/diagnose_child_back_loins_select.png);
+	background-size: contain;	
+	z-index:12;	
+}
+.c-back-leg{
+	background: url(../images/diagnose_child_back_legs_select.png);
+	background-size: contain;	
+	z-index:12;
+}

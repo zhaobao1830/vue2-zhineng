@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>智能问诊</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no"/>
+  <link rel="stylesheet" href="dialogHtml.css">
+</head>
+<body>
+  <div class="dialog" id="dialog">
+    <div class="dialog-header">
+      <img class="goBackImg" src="../../../static/images/ic_back_grey.png" style="width:24px;height:24px" @click="window.history.back()"/>
+      <span class="span-title">智能问诊</span>
+    </div>
+    <!--对话内容-->
+    <div class="dialogueContent" id="dialogueContent">
+      <div class="patch-1"></div>
+      <div class="dialogueItem" id="dialogueItem">
+        <div class="dialogue" id="dialogue" v-for="(item, index) of messageList_x" :key="index">
+          <p class="time">
+            <span>{{item.time}}</span>
+          </p>
+          <div class="dialogueCon" :class="item._id === 0 ? 'dialogueConS' : 'dialogueConF'">
+            <div class="dialogueCon-left" v-if="item._id === 1">
+              <img src="images/p.png">
+            </div>
+            <div class="dialogueCon-center">
+              <div :class="item._id === 0 ? 'self' : 'friend'">
+                {{item.message}}
+              </div>
+              <div v-if="item._id === 1" v-for="(subItem, index) in item.help_question" :key="index">
+                <span class="help_question-span" @click="sendValueObject(subItem)">{{subItem}}</span>
+              </div>
+            </div>
+            <div class="dialogueCon-right" v-if="item._id === 0">
+              <img src="images/patient.png">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="patch-2"></div>
+      <!--导诊-->
+      <div class="guidanceDiv">
+        <div class="guidance" v-show="!guidanceShow">
+          <span class="guidanceCon">不知道什么病,去<a class="guidanceGo" href="../intelligentHtml/intelligentHtml.html" target="_self">症状导诊</a>一下吧</span>
+          <img class="closeImg" src="images/close.png" alt="关闭" @click="changeGuidanceShow(true)">
+        </div>
+        <div class="guidanceAdd" v-show="guidanceShow" @click="changeGuidanceShow(false)">
+          <img src="images/add.png" alt="add">
+        </div>
+      </div>
+    </div>
+    <!--底部输入框-->
+    <div
+      class="dialogueFooter"
+      ref="footer"
+    >
+      <div class="footer-input">
+        <input
+          placeholder="输入文字"
+          v-model="messageVal"
+          @focus="footerFocus"
+          @blur="footerBlur"
+        />
+      </div>
+      <div class="footer-button" @click="sendValue">发送</div>
+    </div>
+  </div>
+  <script type="application/javascript" src="../../js/3.5.1.jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    $(function () {
+      let now = new Date()
+      // let time = `${now.getHours()}:${now.getMinutes()}`
+      let time = `${now.getHours()}`.length === 2 ? (`${now.getMinutes()}`.length === 2?`${now.getHours()}
+ :${now.getMinutes()}` : `${now.getHours()}:0${now.getMinutes()}`)
+        :(`${now.getMinutes()}`.length === 2 ? `0${now.getHours()}:${now.getMinutes()}`:`0${now.getHours()}:0${now.getMinutes()}`)
+
+      let vm = new Vue({
+        el: '#dialog',
+        data: {
+          messageList_x: [], // 当前聊天记录
+          messageVal: '', // 聊天值
+          num: 0,
+          userData: {
+            self: {
+              "_id": 0,
+              "avatar": "/static/images/patient.png",
+              "name": "不忘初心"
+            },
+            friend: {
+              "_id": 1,
+              "avatar": "/static/images/p.png",
+              "name": "智杰小智"
+            }
+          },
+          guidanceShow: false, // 导诊提示显示/隐藏
+          ifSelf: false,
+          timerInput: ''
+        },
+        created() {
+          this.initStorge()
+        },
+        mounted() {
+          this.nowMessageList()
+        },
+        methods: {
+          initStorge() {
+              // 初始化一些常用数据，根据vue的理念，使用到的数据都必须先进行初始化设置。
+              let state = {
+                // 初始化基础数据
+                data: {self: {}, friends: []},
+                // ajax请求数据是否结束
+                isAjax: false,
+                // 当前被选中或者在聊天中的friend的_id
+                activeId: 1,
+                // 聊天队列，这里为每个朋友添加了一个聊天队列，偷懒写法，如果有需要可以改成动态添加
+                // _id是作为聊天队列的标记，list是聊天内容，list里的数据格式{_id:xx, message:xxx},组件内会根据_id来将对话插入
+                // 到左边，还是右边，判断message是自己还是ai发出的
+                messageList: [
+                  {
+                    _id: 1,
+                    list: [{_id: 1, message: '你好,我是小智,欢迎您进行咨询,咨询方式可以参考以下内容:', time: time, help_question: ['咳嗽用药', '咳嗽的症状', '头痛忌口']}],
+                  }
+                ]
+              }
+            localStorage.setItem('vue-chat-session', JSON.stringify(state));
+          },
+          // 对当前消息队列中的消息进行加工，添加对应的好友资料
+          nowMessageList() {
+            let message = localStorage.getItem('vue-chat-session');
+            let messObj = JSON.parse(message);
+            let list = messObj.messageList;
+            if(typeof(list[0].list) === "undefined" || list[0].list === null){
+              list[0].list = [{"_id":1,"message":"你好,我是小智,欢迎您进行咨询,咨询方式可以参考以下内容:","time":time,"help_question":["咳嗽用药","咳嗽的症状","头痛忌口"]}]
+            }
+            let messageData = list[0].list
+            for(let i = 0; i < messageData.length;i++){
+              if(typeof(messageData[i].more_question) != "undefined"){
+                messageData[i].more = true
+                messageData[i].less = false
+                messageData[i].question = []
+              }
+            }
+            this.messageList_x = messageData
+          },
+          sendValue() {
+            const options = {
+              self: true,
+              _id: this.userData.friend._id,
+              message: this.messageVal
+            }
+            this.changeList(options)
+            this.sendValue2(options)
+          },
+          sendValueObject(val) {
+            const options = {
+              self: true,
+              _id: this.userData.friend._id,
+              message: val
+            }
+            this.changeList(options)
+            this.sendValue2(options)
+          },
+          sendValue2(options) {
+            this.num = 1
+            if (options.message) {
+              axios.get('http://122.112.148.65:9004/qaRequest', {
+                params: {
+                  question: options.message
+                }
+              })
+              .then((res) => {
+                let _id = 1
+                let robotData = res.data
+                let len = robotData.help_question.length
+                let help_question = []
+                let more_question = []
+                let question = []
+                let message = ''
+                if(robotData.final_answers instanceof Array){
+                  message = robotData.final_answers [0]
+                }else{
+                  message = robotData.final_answers
+                }
+                if(len>5){
+                  for(let i = 0; i<len;i++){
+                    if(i<5){
+                      help_question.push(robotData.help_question[i])
+                    }else{
+                      more_question.push(robotData.help_question[i])
+                    }
+                  }
+                  this.changeList({ _id, message: message ,help_question:help_question,more_question:more_question,question:question,more:true,less:false})
+                }else{
+                  this.changeList({ _id, message: message ,help_question:robotData.help_question,more:false,less:false})
+                }
+                this.messageVal = ''
+              })
+            }
+          },
+          changeList(obj) {
+            const storageVal = JSON.parse(localStorage.getItem('vue-chat-session'))
+            const messageList = storageVal.messageList
+            // 判断信息是自己的还是ai的，然后插入聊天队列中
+            if (obj.self) {
+              // 信息是自己发送的
+              for(let i = 0; i< messageList.length ;i++){
+                obj._id = 0
+                messageList[i].list.push({ ...obj, time })
+              }
+            } else {
+              // 信息是ai发送的
+              for(let i = 0; i<messageList.length ;i++){
+                messageList[i].list.push({ ...obj, time })
+              }
+            }
+            localStorage.setItem('vue-chat-session', JSON.stringify(storageVal))
+            this.nowMessageList()
+          },
+          changeGuidanceShow(flag) {
+            this.guidanceShow = flag
+          },
+          // 输入框获得焦点时触发
+          footerFocus() {
+            this.timerInput = setInterval(() => {
+              // 完美解决输入框被软键盘遮挡
+              this.$refs.footer.scrollIntoView(false)
+            }, 200)
+          },
+          footerBlur() {
+            // 输入框失去焦点时清除定时器
+            clearInterval(this.timerInput)
+          },
+          // 跳转到症状导诊页面
+          goIntelligent() {
+            window.open("../intelligentHtml/intelligentHtml.html", self)
+          }
+        },
+        watch: {
+          messageList_x() {
+            this.$nextTick(() => {
+              $(document).scrollTop($("#dialogueItem").height())
+            })
+          }
+        }
+      })
+    })
+  </script>
+</body>
+</html>
