@@ -35,7 +35,7 @@ html{
   left: 49%;
   transform: translateX(-49%);
   position: absolute;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
 }
 
@@ -168,7 +168,7 @@ html{
   text-align: left;
   word-break: break-all;
   top:5px;
-  background:transparent url('../../../static/images/anwer.png') no-repeat left center;
+  background:transparent url('./images/anwer.png') no-repeat left center;
   background-size:16px;
   border-bottom:1px solid orange;
 }
@@ -187,6 +187,7 @@ html{
 }
 .guidance > .guidanceCon{
   color: rgba(0, 0, 0, 0.87);
+  font-size: 15px;
 }
 .guidance > .guidanceCon > .guidanceGo{
   color: #007aff;

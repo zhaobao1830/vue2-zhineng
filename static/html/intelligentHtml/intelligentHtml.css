@@ -1,5 +1,6 @@
 a, li{
   list-style: none;
+  text-decoration: none;
 }
 body{
   overflow-x: hidden;
@@ -17,9 +18,10 @@ html{
   width: 100vw;
   height: 100vh;
   background: #f4f4f6;
+}
+.intelligentStyle{
   overflow: hidden;
 }
-
 .intelligent-header{
   box-shadow: 10px 10px 10px rgba(0,0,0,0.1);
   width: 100%;
@@ -36,7 +38,7 @@ html{
   left: 49%;
   transform: translateX(-49%);
   position: absolute;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 500;
 }
 
@@ -617,7 +619,9 @@ html{
   position: relative;
   top: 8%;
 }
-
+.detailsDialogDiv{
+  display: none;
+}
 .detailsDialog{
   background-color: rgba(0, 0, 0, 0.4);
   position: fixed;
@@ -666,8 +670,10 @@ html{
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 16px;
   background-color: rgba(0, 0, 0, 0.54);
+}
+.card-title-sub-title-con{
+  padding: 16px;
 }
 .card-title{
   font-size: 24px;
@@ -702,6 +708,7 @@ html{
   height: 36px;
   line-height: 36px;
   min-width: 88px;
+  color: rgba(0, 0, 0, 0.87);;
 }
 .card-actions > .goDepartment{
   margin-left: 30px;

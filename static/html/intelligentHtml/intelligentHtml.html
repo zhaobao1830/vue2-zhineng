@@ -9,9 +9,9 @@
   <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
 </head>
 <body>
-  <div class="intelligent" id="intelligent">
+  <div class="intelligent" id="intelligent" :class="detailsDialogShow === true ? 'intelligentStyle' : ''">
     <div class="intelligent-header">
-      <img class="goBackImg" src="../../../static/images/ic_back_grey.png" style="width:24px;height:24px" @click="window.history.back()"/>
+      <img class="goBackImg" src="./images/ic_back_grey.png" style="width:24px;height:24px" @click="window.history.back()"/>
       <span class="span-title">症状导诊</span>
     </div>
     <div class="sidenav">
@@ -44,6 +44,7 @@
             <li
               class="iu-table-view-cell"
               v-for="dis in disease_data"
+              @click="goDetails(dis.disease_name)"
             >
               <span>{{dis.disease_name}}</span>
             </li>
@@ -183,46 +184,51 @@
         </div>
       </div>
     </div>
-    <div class="detailsDialog">
-      <div class="detailsDialog-con">
-        <div class="detailsDialog-body">
-          <div class="detailsDialog-card">
-            <div class="card-media">
-              <img src="./images/card_bg.jpg"/>
-              <div class="card-title-sub-title">
-                <div class="card-title">臂丛神经损伤</div>
-                <div class="card-sub-title">疾病详情</div>
-              </div>
-            </div>
-            <div class="card-content">
-              <div class="card-text">
-                <div class="card-text-con">
-                  臂丛神经损伤,熟悉一下：臂丛神经损伤(brachialplexus)是周围神经损伤的一个常见类型主要表现以肩胛带肌为主的疼痛、无力和肌萎缩。
-                  臂丛损伤也见于肩颈部枪弹，弹片炸伤等火器性贯通伤或盲管伤，刀刺伤，玻璃切割伤，药物性损伤及手术误伤等等，此类损伤多较局限，
-                  但损伤程度较严重，多为神经根干部断裂，可伴有锁骨下，腋动静脉等损伤，锁骨骨折，肩关节前脱位，颈肋，前斜角肌综合征，
-                  原发性或转移至臂丛附近的肿瘤也可压迫损伤臂丛神经。
+    <div class="detailsDialogDiv" :style="{'display' : detailsDialogShow ? 'block' : 'none'}">
+      <div class="detailsDialog">
+        <div class="detailsDialog-con">
+          <div class="detailsDialog-body">
+            <div class="detailsDialog-card">
+              <div class="card-media">
+                <img src="./images/card_bg.jpg"/>
+                <div class="card-title-sub-title">
+                  <div class="card-title-sub-title-con">
+                    <div class="card-title">{{cardTitle}}</div>
+                    <div class="card-sub-title">疾病详情</div>
+                  </div>
                 </div>
               </div>
-              <div class="card-actions">
-                <span class="ask">去问小智</span>
-                <span class="goDepartment">相关科室</span>
+              <div class="card-content">
+                <div class="card-text">
+                  <div class="card-text-con">
+                    {{cardTextVal}}
+                  </div>
+                </div>
+                <div class="card-actions">
+                  <a class="ask" :href="askUrl" target="_self">去问小智</a>
+                  <a class="goDepartment">相关科室</a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="detailsDialog-action">
-          <span>关闭</span>
+          <div
+            class="detailsDialog-action"
+            @click="closeDetailsDialog"
+          >
+            <span>关闭</span>
+          </div>
         </div>
       </div>
     </div>
   </div>
-  <script type="application/javascript" src="../../js/3.5.1.jquery.min.js"></script>
+  <script type="application/javascript" src="../js/3.5.1.jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://unpkg.com/swiper/swiper-bundle.js"> </script>
   <script>
     $(function () {
       const url = 'http://122.112.148.65:9005'
+      const url1 = 'http://122.112.148.65:9004'
       let vm = new Vue({
         el: '#intelligent',
         data: {
@@ -237,7 +243,11 @@
           page_size: 0,
           ifSearchData: false,
           dialogShow: false,
-          dialogName: ''
+          dialogName: '',
+          cardTitle: '',
+          cardTextVal: '',
+          detailsDialogShow: false,
+          askUrl: '../dialogHtml/dialogHtml.html'
         },
         created() {
           this.getParts(1)
@@ -446,15 +456,496 @@
               obj.fadeOut().children().fadeOut();
             }
           },
-          childclick() {},
-          oncback() {},
-          womanclick() {},
-          onfemale() {},
-          oncmale() {},
-          onchead() {},
-          onfback() {},
-          onghead() {},
-          onback() {},
+          womanclick(e) {
+            let obj = $(e.target)
+            let fhead = $('.f-head')
+            if(obj[0].className === "swiper-slide swiper-slide-active"){
+              this.tapHide()
+              fhead.fadeOut().children().fadeOut();
+            }
+          },
+          onfemale(e){
+            let that = this
+            let obj = $(e.target)
+            let ghead = $('.f-head');
+            let containX = e.clientX - obj.offset().left - that.floatX;
+            let containY = e.clientY - obj.offset().top  - that.floatX;
+            that.searchString = ""
+            if((96 < containX) && (containX < 141) && (0 < containY) && (containY < 48)){
+              ghead.fadeIn().siblings().fadeOut();
+            }else if((108 < containX) && (containX < 131) && (48 < containY) && (containY < 72)){
+              if(ghead.css('display') === 'none'){
+                obj.children('.f-neck').fadeIn().siblings().fadeOut();
+                obj.children('.f-neck').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('颈部')
+                }, 250);
+              }
+            }else if((0 < containX) && (containX < 91) && (69 < containY) && (containY < 215) && ((-1.43 * containX + 203.55) < (containY + 30)) && ((-1.43 * containX + 203.55) > (containY - 30))){
+              if(ghead.css('display') === 'none'){
+                obj.children('.f-right-arm').fadeIn().siblings().fadeOut();
+                obj.children('.f-right-arm').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('上肢')
+                }, 250);
+              }
+            }else if((147 < containX) && (containX < 254) && (68 < containY) && (containY < 194) && ((1.18 * containX - 104.80) < (containY + 30)) && ((1.18 * containX - 104.80) > (containY - 30))){
+              if(ghead.css('display') === 'none'){
+                obj.children('.f-left-arm').fadeIn().siblings().fadeOut();
+                obj.children('.f-left-arm').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('上肢')
+                }, 250);
+              }
+            }else if((89 < containX) && (containX < 148) && (71 < containY) && (containY < 120)){
+              if(ghead.css('display') === 'none'){
+                obj.children('.f-chest').fadeIn().siblings().fadeOut();
+                obj.children('.f-chest').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('胸部')
+                }, 250);
+              }
+            }else if((94 < containX) && (containX < 144) && (120 < containY) && (containY < 171)){
+              if(ghead.css('display') === 'none'){
+                obj.children('.f-belly').fadeIn().siblings().fadeOut();
+                obj.children('.f-belly').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('腹部')
+                }, 250);
+              }
+            }else if((83 < containX) && (containX < 157) && (181 < containY) && (containY < 204)){
+              if(ghead.css('display') === 'none'){
+                obj.children('.f-middle').fadeIn().siblings().fadeOut();
+                obj.children('.f-middle').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('生殖部位')
+                }, 250);
+              }
+            }else if((96 < containX) && (containX < 118) && (204 < containY) && (containY < 420)){
+              if(ghead.css('display') === 'none'){
+                obj.children('.f-right-leg').fadeIn().siblings().fadeOut();
+                obj.children('.f-right-leg').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('下肢')
+                }, 250);
+              }
+            }else if((122 < containX) && (containX < 145) && (204 < containY) && (containY < 420)){
+              if(ghead.css('display') === 'none'){
+                obj.children('.f-left-leg').fadeIn().siblings().fadeOut();
+                obj.children('.f-left-leg').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('下肢')
+                }, 250);
+              }
+            }else{
+              if(ghead.css('display') === 'none'){
+                that.tapHide();
+                obj.children().fadeOut();
+              }
+            }
+          },
+          onghead(e){
+            let that = this
+            let obj = $(e.target)
+            let containX = e.clientX - obj.offset().left;
+            let containY = e.clientY - obj.offset().top - that.floatX;
+            that.searchString = ""
+            if((69 < containX) && (containX < 187) && (69 < containY) && (containY < 108)){
+              obj.children('.f-big-head').fadeIn().siblings().fadeOut();
+              obj.children('.f-big-head').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('头部')
+              }, 250);
+            }else if((54 < containX) && (containX < 75) && (143 < containY) && (containY < 191)){
+              obj.children('.f-big-ear').fadeIn().siblings().fadeOut();
+              obj.children('.f-big-ear').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('耳')
+              }, 250);
+            }else if((187 < containX) && (containX < 225) && (143 < containY) && (containY < 191)){
+              obj.children('.f-big-ear').fadeIn().siblings().fadeOut();
+              obj.children('.f-big-ear').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('耳')
+              }, 250);
+            }else if((71 < containX) && (containX < 183) && (148 < containY) && (containY < 163)){
+              obj.children('.f-big-eyes').fadeIn().siblings().fadeOut();
+              obj.children('.f-big-eyes').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('眼')
+              }, 250);
+            }else if((120 < containX) && (containX < 155) && (151 < containY) && (containY < 189)){
+              obj.children('.f-big-nose').fadeIn().siblings().fadeOut();
+              obj.children('.f-big-nose').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('鼻')
+              }, 250);
+            }else if((80 < containX) && (containX < 172) && (200 < containY) && (containY < 235)){
+              obj.children('.f-big-mouth').fadeIn().siblings().fadeOut();
+              obj.children('.f-big-mouth').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('口')
+              }, 250);
+            }else if((69 < containX) && (containX < 187) && (108 < containY) && (containY < 240)){
+            }else{
+              that.tapHide();
+              obj.fadeOut().children().fadeOut();
+            }
+          },
+          onfback(e){
+            let that = this
+            let obj = $(e.target)
+            let containX = e.clientX - obj.offset().left - that.floatX;
+            let containY = e.clientY - obj.offset().top - that.floatY;
+            that.searchString = ""
+            if((13 < containX) && (containX < 94) && (70 < containY) && (containY < 209) && ((-1.74 * containX + 203.42) < (containY + 30)) && ((-1.74 * containX + 203.42) > (containY - 30))){
+              obj.children('.f-back-left-arm').fadeIn().siblings().fadeOut();
+              obj.children('.f-back-right-arm').fadeIn().siblings().fadeOut();
+              obj.children('.f-back').fadeIn().siblings().fadeOut();
+              obj.children('.f-back').fadeOut().siblings().fadeOut();
+              obj.children('.f-back-left-arm').fadeOut().siblings().fadeOut();
+              obj.children('.f-back-right-arm').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('皮肤')
+              }, 250);
+            }else if((94 < containX) && (containX < 146) && (47 < containY) && (containY < 75)){
+              obj.children('.f-back-left-arm').fadeIn().siblings().fadeOut();
+              obj.children('.f-back-right-arm').fadeIn().siblings().fadeOut();
+              obj.children('.f-back').fadeIn().siblings().fadeOut();
+              obj.children('.f-back').fadeOut().siblings().fadeOut();
+              obj.children('.f-back-left-arm').fadeOut().siblings().fadeOut();
+              obj.children('.f-back-right-arm').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('皮肤')
+              }, 250);
+            }else if((147 < containX) && (containX < 254) && (68 < containY) && (containY < 194) && ((1.18 * containX - 104.80) < (containY + 30)) && ((1.18 * containX - 104.80) > (containY - 30))){
+              obj.children('.f-back-left-arm').fadeIn().siblings().fadeOut();
+              obj.children('.f-back-right-arm').fadeIn().siblings().fadeOut();
+              obj.children('.f-back').fadeIn().siblings().fadeOut();
+              obj.children('.f-back').fadeOut().siblings().fadeOut();
+              obj.children('.f-back-left-arm').fadeOut().siblings().fadeOut();
+              obj.children('.f-back-right-arm').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('皮肤')
+              }, 250);
+            }else if((88 < containX) && (containX < 150) && (90 < containY) && (containY < 121)){
+              obj.children('.f-back-bone').fadeIn().siblings().fadeOut();
+              obj.children('.f-back-bone').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('全身')
+              }, 250);
+            }else if((93 < containX) && (containX < 145) && (121 < containY) && (containY < 162)){
+              obj.children('.f-back-lion').fadeIn().siblings().fadeOut();
+              obj.children('.f-back-pelvis').fadeIn().siblings().fadeOut();
+              obj.children('.f-back-pelvis').fadeOut().siblings().fadeOut();
+              obj.children('.f-back-lion').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('腰部')
+              }, 250);
+            }else if((88 < containX) && (containX < 149) && (162 < containY) && (containY < 176)){
+              obj.children('.f-back-lion').fadeIn().siblings().fadeOut();
+              obj.children('.f-back-pelvis').fadeIn().siblings().fadeOut();
+              obj.children('.f-back-pelvis').fadeOut().siblings().fadeOut();
+              obj.children('.f-back-lion').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('腰部')
+              }, 250);
+            }else if((83 < containX) && (containX < 154) && (176 < containY) && (containY < 213)){
+              obj.children('.f-back-hip').fadeIn().siblings().fadeOut();
+              obj.children('.f-back-hip').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('排泄部位')
+              }, 250);
+            }else if((124 < containX) && (containX < 164) && (218 < containY) && (containY < 391)){
+              obj.children('.f-back-leg').fadeIn().siblings().fadeOut();
+              obj.children('.f-back-leg').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('下肢')
+              }, 250);
+            }else if((76 < containX) && (containX < 115) && (218 < containY) && (containY < 391)){
+              obj.children('.f-back-leg').fadeIn().siblings().fadeOut();
+              obj.children('.f-back-leg').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('下肢')
+              }, 250);
+            }else{
+              that.tapHide();
+              obj.children().fadeOut();
+            }
+          },
+          childclick(e){
+            let obj = $(e.target)
+            let fhead = $('.c-head')
+            if(obj[0].className === "swiper-slide swiper-slide-active"){
+              this.tapHide()
+              fhead.fadeOut().children().fadeOut();
+            }
+          },
+          oncmale(e){
+            let that = this
+            let obj = $(e.target)
+            let chead = $('.c-head');
+            let containX = e.clientX - obj.offset().left - that.floatX;
+            let containY = e.clientY - obj.offset().top -that.floatY;
+            that.searchString = ""
+            if((93 < containX) && (containX < 166) && (121 < containY) && (containY < 202)){
+              chead.fadeIn().siblings().fadeOut();
+            }else if((107 < containX) && (containX < 155) && (202 < containY) && (containY < 221)){
+              if(chead.css('display') === 'none'){
+                obj.children('.c-neck').fadeIn().siblings().fadeOut();
+                obj.children('.c-neck').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('颈部')
+                }, 250);
+              }
+            }else if((13 < containX) && (containX < 98) && (214 < containY) && (containY < 291) && ((-0.68 * containX + 288.75) < (containY + 30)) && ((-0.68 * containX + 288.75) > (containY - 30))){
+              if(chead.css('display') === 'none'){
+                obj.children('.c-right-arm').fadeIn().siblings().fadeOut();
+                obj.children('.c-right-arm').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('上肢')
+                }, 250);
+              }
+            }else if((164 < containX) && (containX < 247) && (214 < containY) && (containY < 291) && ((0.32 * containX + 202.56) < (containY + 30)) && ((0.32 * containX + 202.56) > (containY - 30))){
+              if(chead.css('display') === 'none'){
+                obj.children('.c-left-arm').fadeIn().siblings().fadeOut();
+                obj.children('.c-left-arm').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('上肢')
+                }, 250);
+              }
+            }else if((98 < containX) && (containX < 164) && (221 < containY) && (containY < 256)){
+              if(chead.css('display') === 'none'){
+                obj.children('.c-chest').fadeIn().siblings().fadeOut();
+                obj.children('.c-chest').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('胸部')
+                }, 250);
+              }
+            }else if((94 < containX) && (containX < 168) && (256 < containY) && (containY < 304)){
+              if(chead.css('display') === 'none'){
+                obj.children('.c-belly').fadeIn().siblings().fadeOut();
+                obj.children('.c-belly').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('腹部')
+                }, 250);
+              }
+            }else if((91 < containX) && (containX < 170) && (304 < containY) && (containY < 330)){
+              if(chead.css('display') === 'none'){
+                obj.children('.c-middle').fadeIn().siblings().fadeOut();
+                obj.children('.c-middle').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('生殖部位')
+                }, 250);
+              }
+            }else if((94 < containX) && (containX < 120) && (330 < containY) && (containY < 439)){
+              if(chead.css('display') === 'none'){
+                obj.children('.c-right-leg').fadeIn().siblings().fadeOut();
+                obj.children('.c-right-leg').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('下肢')
+                }, 250);
+              }
+            }else if((140 < containX) && (containX < 166) && (330 < containY) && (containY < 439)){
+              if(chead.css('display') === 'none'){
+                obj.children('.c-left-leg').fadeIn().siblings().fadeOut();
+                obj.children('.c-left-leg').fadeOut().siblings().fadeOut();
+                setTimeout(function (){
+                  that.tapMenu('下肢')
+                }, 250);
+              }
+            }else{
+              if(chead.css('display') === 'none'){
+                that.tapHide();
+                obj.children().fadeOut();
+              }
+            }
+          },
+          onchead(e){
+            let that = this
+            let obj = $(e.target)
+            let containX = e.clientX - obj.offset().left
+            let containY = e.clientY - obj.offset().top - that.floatY
+            that.searchString = ""
+            if((62 < containX) && (containX < 204) && (81 < containY) && (containY < 140)){
+              obj.children('.c-big-head').fadeIn().siblings().fadeOut();
+              obj.children('.c-big-head').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('头部')
+              }, 250);
+              setTimeout(function (){
+                that.tapMenu('眼')
+              }, 250);
+            }else if((109 < containX) && (containX < 160) && (195 < containY) && (containY < 220)){
+              obj.children('.c-big-nose').fadeIn().siblings().fadeOut();
+              obj.children('.c-big-nose').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('鼻')
+              }, 250);
+            }else if((71 < containX) && (containX < 174) && (225 < containY) && (containY < 245)){
+              obj.children('.c-big-mouth').fadeIn().siblings().fadeOut();
+              obj.children('.c-big-mouth').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('口')
+              }, 250);
+            }else if((79 < containX) && (containX < 200) && (159 < containY) && (containY < 190)){
+              obj.children('.c-big-eyes').fadeIn().siblings().fadeOut();
+              obj.children('.c-big-eyes').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('眼')
+              }, 250);
+            }else if((52 < containX) && (containX < 72) && (165 < containY) && (containY < 210)){
+              obj.children('.c-big-ear').fadeIn().siblings().fadeOut();
+              obj.children('.c-big-ear').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('耳')
+              }, 250);
+            }else if((200 < containX) && (containX < 236) && (165 < containY) && (containY < 210)){
+              obj.children('.c-big-ear').fadeIn().siblings().fadeOut();
+              obj.children('.c-big-ear').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('耳')
+              }, 250);
+            }else if((68 < containX) && (containX < 197) && (140 < containY) && (containY < 263)){
+            }else{
+              that.tapHide();
+              obj.fadeOut().children().fadeOut();
+            }
+          },
+          oncback(e){
+            let that = this
+            let obj = $(e.target)
+            let containX = e.clientX - obj.offset().left - that.floatX
+            let containY = e.clientY - obj.offset().top - that.floatY
+            that.searchString = ""
+            if((86 < containX) && (containX < 160) && (202 < containY) && (containY < 245)){
+              obj.children('.c-back-bone').fadeIn().siblings().fadeOut();
+              obj.children('.c-back-bone').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('全身')
+              }, 250);
+            }else if((13 < containX) && (containX < 98) && (214 < containY) && (containY < 291) && ((-0.68 * containX + 288.75) < (containY + 30)) && ((-0.68 * containX + 288.75) > (containY - 30))){
+              obj.children('.c-back-arm').fadeIn().siblings().fadeOut();
+              obj.children('.c-back-arm').fadeOut().siblings().fadeOut();
+              obj.children('.c-back-arm-right').fadeIn().siblings().fadeOut();
+              obj.children('.c-back-arm-right').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('皮肤')
+              }, 250);
+            }else if((164 < containX) && (containX < 247) && (214 < containY) && (containY < 291) && ((0.32 * containX + 182.56) < (containY + 30)) && ((0.32 * containX + 182.56) > (containY - 30))){
+              obj.children('.c-back-arm').fadeIn().siblings().fadeOut();
+              obj.children('.c-back-arm').fadeOut().siblings().fadeOut();
+              obj.children('.c-back-arm-right').fadeIn().siblings().fadeOut();
+              obj.children('.c-back-arm-right').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('皮肤')
+              }, 250);
+            }else if((95 < containX) && (containX < 160) && (300 < containY) && (containY < 340)){
+              obj.children('.c-back-buttocks').fadeIn().siblings().fadeOut();
+              obj.children('.c-back-buttocks').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('排泄部位')
+              }, 250);
+            }else if((90 < containX) && (containX < 150) && (275 < containY) && (containY < 300)){
+              obj.children('.c-back-loins').fadeIn().siblings().fadeOut();
+              obj.children('.c-back-loins').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('腰部')
+              }, 250);
+            }else if((136 < containX) && (containX < 167) && (340 < containY) && (containY < 430)){
+              obj.children('.c-back-leg').fadeIn().siblings().fadeOut();
+              obj.children('.c-back-leg').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('下肢')
+              }, 250);
+            }else if((90 < containX) && (containX < 121) && (340 < containY) && (containY < 430)){
+              obj.children('.c-back-leg').fadeIn().siblings().fadeOut();
+              obj.children('.c-back-leg').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('下肢')
+              }, 250);
+            }else{
+              that.tapHide();
+              obj.children().fadeOut();
+            }
+          },
+          onback(e){
+            let that = this
+            let obj = $(e.target)
+            let containX = e.clientX - obj.offset().left - that.floatX;
+            let containY = e.clientY - obj.offset().top - that.floatY;
+            that.searchString = ""
+            if((102 < containX) && (containX < 155) && (62 < containY) && (containY < 95)){
+              obj.children('.m-back-neck').fadeIn().siblings().fadeOut();
+              obj.children('.m-back-left-arm').fadeIn().siblings().fadeOut();
+              obj.children('.m-back-right-arm').fadeIn().siblings().fadeOut();
+              obj.children('.m-back-neck').fadeOut().siblings().fadeOut();
+              obj.children('.m-back-left-arm').fadeOut().siblings().fadeOut();
+              obj.children('.m-back-right-arm').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('皮肤')
+              }, 250);
+            }else if((0 < containX) && (containX < 88) && (84 < containY) && (containY < 290) && ((-2.37 * containX + 262.42) < (containY + 30)) && ((-2.37 * containX + 262.42) > (containY - 30))){
+              obj.children('.m-back-neck').fadeIn().siblings().fadeOut();
+              obj.children('.m-back-left-arm').fadeIn().siblings().fadeOut();
+              obj.children('.m-back-right-arm').fadeIn().siblings().fadeOut();
+              obj.children('.m-back-neck').fadeOut().siblings().fadeOut();
+              obj.children('.m-back-left-arm').fadeOut().siblings().fadeOut();
+              obj.children('.m-back-right-arm').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('皮肤')
+              }, 250);
+            }else if((169 < containX) && (containX < 253) && (86 < containY) && (containY < 296) && ((2.47 * containX - 331.14) < (containY + 30)) && ((2.47 * containX - 331.14) > (containY - 30))){
+              obj.children('.m-back-neck').fadeIn().siblings().fadeOut();
+              obj.children('.m-back-left-arm').fadeIn().siblings().fadeOut();
+              obj.children('.m-back-right-arm').fadeIn().siblings().fadeOut();
+              obj.children('.m-back-neck').fadeOut().siblings().fadeOut();
+              obj.children('.m-back-left-arm').fadeOut().siblings().fadeOut();
+              obj.children('.m-back-right-arm').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('皮肤')
+              }, 250);
+            }else if((92 < containX) && (containX < 168) && (98 < containY) && (containY < 154)){
+              obj.children('.m-back').fadeIn().siblings().fadeOut();
+              obj.children('.m-back').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('全身')
+              }, 250);
+            }else if((88 < containX) && (containX < 166) && (154 < containY) && (containY < 195)){
+              obj.children('.m-back-belly').fadeIn().siblings().fadeOut();
+              obj.children('.m-back-belly').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('腰部')
+              }, 250);
+            }else if((81 < containX) && (containX < 172) && (195 < containY) && (containY < 211)){
+              obj.children('.m-back-pelvis').fadeIn().siblings().fadeOut();
+              obj.children('.m-back-pelvis').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('腰部')
+              }, 250);
+            }else if((78 < containX) && (containX < 176) && (211 < containY) && (containY < 246)){
+              obj.children('.m-back-middle').fadeIn().siblings().fadeOut();
+              obj.children('.m-back-middle').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('排泄部位')
+              }, 250);
+            }else if((130 < containX) && (containX < 160) && (275 < containY) && (containY < 498)){
+              obj.children('.m-back-leg').fadeIn().siblings().fadeOut();
+              obj.children('.m-back-leg').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('下肢')
+              }, 250);
+            }else if((83 < containX) && (containX < 114) && (275 < containY) && (containY < 498)){
+              obj.children('.m-back-leg').fadeIn().siblings().fadeOut();
+              obj.children('.m-back-leg').fadeOut().siblings().fadeOut();
+              setTimeout(function (){
+                that.tapMenu('下肢')
+              }, 250);
+            }else{
+              that.tapHide();
+              obj.children().fadeOut();
+            }
+          },
           tapHide(){
             $('.sidenav').css('width','0');
             $('.in-content').css('margin-left','0')
@@ -577,6 +1068,31 @@
           // 点击左侧列表，获取右侧数据
           getSidenavRight(code, page) {
             this.partCode(code.join(","), this.controlItemId, page)
+          },
+          goDetails(name) {
+            axios.get(url1 + '/qaRequest', {
+              params: {
+                question: name
+              }
+            }).then(res => {
+              this.tapHide()
+              this.detailsDialogShow = true
+              this.cardTitle = name
+              this.askUrl = this.askUrl + '?question=' + encodeURI(encodeURI(name))
+              if(res.data.final_answers instanceof Array){
+                this.cardTextVal = res.data.final_answers[0]
+              }else{
+                this.cardTextVal = res.data.final_answers
+              }
+              if(this.cardTextVal === "这个问题太难了,小智回答不上来,\n你可以参考下面的方式进行咨询"){
+                this.cardTextVal = "暂无详情"
+              }
+            })
+          },
+          closeDetailsDialog() {
+            this.detailsDialogShow = false
+            this.cardTitle = ''
+            this.cardTextVal = ''
           }
         }
       })
