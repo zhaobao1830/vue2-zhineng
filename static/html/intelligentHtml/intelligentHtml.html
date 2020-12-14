@@ -221,7 +221,7 @@
       </div>
     </div>
   </div>
-  <script type="application/javascript" src="../js/3.5.1.jquery.min.js"></script>
+  <script type="application/javascript" src="js/3.5.1.jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="https://unpkg.com/swiper/swiper-bundle.js"> </script>
@@ -1017,10 +1017,13 @@
               }).then(res => {
                 if(res.data.data.length === 0){
                   this.ifSearchData = false
+                  this.page = 1
+                  this.page_size = 1
                 } else {
                   this.ifSearchData = true
                   this.disease_data = res.data.data
-                  this.page_size = res.data.page_size
+                  this.page = 1
+                  this.page_size = 1
                 }
               })
             }
@@ -1067,6 +1070,7 @@
           },
           // 点击左侧列表，获取右侧数据
           getSidenavRight(code, page) {
+            this.searchString = ''
             this.partCode(code.join(","), this.controlItemId, page)
           },
           goDetails(name) {
