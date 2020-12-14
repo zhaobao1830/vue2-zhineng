@@ -2,236 +2,323 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>症状导诊</title>
+  <title>智能问诊</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no"/>
-  <link rel="stylesheet" href="intelligentHtml.css">
-  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.css">
-  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+  <link rel="stylesheet" href="css/dialogHtml.css">
+  <link rel="stylesheet" href="css/intelligentHtml.css">
+  <link rel="stylesheet" href="css/swiper-bundle.css">
 </head>
 <body>
-  <div class="intelligent" id="intelligent" :class="detailsDialogShow === true ? 'intelligentStyle' : ''">
-    <div class="intelligent-header">
-      <img class="goBackImg" src="./images/ic_back_grey.png" style="width:24px;height:24px" @click="window.history.back()"/>
-      <span class="span-title">症状导诊</span>
-    </div>
-    <div class="sidenav">
-      <div class="sidenav-left">
-        <div class="title">人体部位</div>
-        <ul class="iu-table-view iu-table-view-inverted" style="color: #ddd;" id="part">
-          <li class="iu-table-view-cell"
-              v-for="(part_item, index) in part_data"
-              :key="index"
-              @click="getSidenavRight(part_item.part_code, 1)"
-          >
-            <span class="iu-table-view-cell-span" :name="part_item.part_code">{{part_item.part_name}} <i></i></span>
-          </li>
-        </ul>
+  <div class="dialogIntelligent" id="dialogIntelligent">
+    <div class="dialog" v-show="dialogOrintelligentShow">
+      <div class="dialog-header">
+        <img class="goBackImg" src="./images/ic_back_grey.png" style="width:24px;height:24px" @click="window.history.back()"/>
+        <span class="span-title">智能问诊</span>
       </div>
-      <div class="sidenav-right" @touchstart="touchstart">
-        <div class="bar">
-          <input type="text" class="find-disease" v-model="searchString" placeholder="请输入疾病" @keyup.enter="get_search_data"/>
+      <!--对话内容-->
+      <div class="dialogueContent" id="dialogueContent">
+        <div class="patch-1"></div>
+        <div class="dialogueItem" id="dialogueItem">
+          <div class="dialogue" id="dialogue" v-for="(item, index) of messageList_x" :key="index">
+            <p class="time">
+              <span>{{item.time}}</span>
+            </p>
+            <div class="dialogueCon" :class="item._id === 0 ? 'dialogueConS' : 'dialogueConF'">
+              <div class="dialogueCon-left" v-if="item._id === 1">
+                <img src="images/p.png">
+              </div>
+              <div class="dialogueCon-center">
+                <div :class="item._id === 0 ? 'self' : 'friend'">
+                  {{item.message}}
+                </div>
+                <div v-if="item._id === 1" v-for="(subItem, index) in item.help_question" :key="index">
+                  <span class="help_question-span" @click="sendValueObject(subItem)">{{subItem}}</span>
+                </div>
+              </div>
+              <div class="dialogueCon-right" v-if="item._id === 0">
+                <img src="images/patient.png">
+              </div>
+            </div>
+          </div>
         </div>
-        <div v-show="ifSearchData === true" class="page-item">第{{page}}页&nbsp;&nbsp;共{{page_size}}页</div>
-        <div v-show="ifSearchData === true" class="dis-data">
-          <ul class="iu-table-view-ui">
-            <li
-              v-show="page > 1"
-              class="iu-table-view-cell"
-              @click="goPrePage"
+        <div class="patch-2"></div>
+        <!--导诊-->
+        <div class="guidanceDiv">
+          <div class="guidance" v-show="!guidanceShow">
+            <span class="guidanceCon">不知道什么病,去<span class="guidanceGo" @click="guidanceGo">症状导诊</span>一下吧</span>
+            <img class="closeImg" src="images/close.png" alt="关闭" @click="changeGuidanceShow(true)">
+          </div>
+          <div class="guidanceAdd" v-show="guidanceShow" @click="changeGuidanceShow(false)">
+            <img src="images/add.png" alt="add">
+          </div>
+        </div>
+      </div>
+      <!--底部输入框-->
+      <div
+        class="dialogueFooter"
+        ref="footer"
+      >
+        <div class="footer-input">
+          <input
+            placeholder="输入文字"
+            v-model="messageVal"
+            @focus="footerFocus"
+            @blur="footerBlur"
+          />
+        </div>
+        <div class="footer-button" @click="sendValue">发送</div>
+      </div>
+    </div>
+    <div class="intelligent" v-show="!dialogOrintelligentShow" :class="detailsDialogShow === true ? 'intelligentStyle' : ''">
+      <div class="intelligent-header">
+        <img class="goBackImg" src="./images/ic_back_grey.png" style="width:24px;height:24px" @click="goBackDialog"/>
+        <span class="span-title">症状导诊</span>
+      </div>
+      <div class="sidenav">
+        <div class="sidenav-left">
+          <div class="title">人体部位</div>
+          <ul class="iu-table-view iu-table-view-inverted" style="color: #ddd;" id="part">
+            <li class="iu-table-view-cell"
+                v-for="(part_item, index) in part_data"
+                :key="index"
+                @click="getSidenavRight(part_item.part_code, 1)"
             >
-              <a>上一页</a>
-            </li>
-            <li
-              class="iu-table-view-cell"
-              v-for="dis in disease_data"
-              @click="goDetails(dis.disease_name)"
-            >
-              <span>{{dis.disease_name}}</span>
-            </li>
-            <li
-              v-show="page < page_size"
-              class="iu-table-view-cell"
-              @click="goNextPage"
-            >
-              <a>下一页</a>
+              <span class="iu-table-view-cell-span" :name="part_item.part_code">{{part_item.part_name}} <i></i></span>
             </li>
           </ul>
         </div>
-        <div v-show="ifSearchData === false" class="search-item">暂无您搜索的疾病</div>
-      </div>
-    </div>
-    <div class="in-content">
-      <div style="padding: 10px 80px;">
-        <div id="segmentedControl" class="in-segmented-control">
-          <a class="in-control-item" :class="{'in-active': controlItemId === 1}" @click="changeControlShow(1)">男性</a>
-          <a class="in-control-item" :class="{'in-active': controlItemId === 2}" @click="changeControlShow(2)">女性</a>
-          <a class="in-control-item" :class="{'in-active': controlItemId === 3}" @click="changeControlShow(3)">儿童</a>
+        <div class="sidenav-right" @touchstart="touchstart">
+          <div class="bar">
+            <input type="text" class="find-disease" v-model="searchString" placeholder="请输入疾病" @keyup.enter="get_search_data"/>
+          </div>
+          <div v-show="ifSearchData === true" class="page-item">第{{page}}页&nbsp;&nbsp;共{{page_size}}页</div>
+          <div v-show="ifSearchData === true" class="dis-data">
+            <ul class="iu-table-view-ui">
+              <li
+                v-show="page > 1"
+                class="iu-table-view-cell"
+                @click="goPrePage"
+              >
+                <a>上一页</a>
+              </li>
+              <li
+                class="iu-table-view-cell"
+                v-for="dis in disease_data"
+                @click="goDetails(dis.disease_name)"
+              >
+                <span>{{dis.disease_name}}</span>
+              </li>
+              <li
+                v-show="page < page_size"
+                class="iu-table-view-cell"
+                @click="goNextPage"
+              >
+                <a>下一页</a>
+              </li>
+            </ul>
+          </div>
+          <div v-show="ifSearchData === false" class="search-item">暂无您搜索的疾病</div>
         </div>
       </div>
-      <div>
-        <div id="item1" class="control-content" :class="{'control-content-active': controlItemId === 1}" @click="getParts(1)">
-          <div class="swiper-container" id="swiper-1">
-            <div class="swiper-wrapper">
-              <div class="swiper-slide" @click="manclick">
-                <div class="person-front" @click="onfront">
-                  <div class="m-head" @click="onfhead">
-                    <div class="m-big-head"></div>
-                    <div class="m-big-ear"></div>
-                    <div class="m-big-eyes"></div>
-                    <div class="m-big-nose"></div>
-                    <div class="m-big-mouth"></div>
+      <div class="in-content">
+        <div style="padding: 10px 80px;">
+          <div id="segmentedControl" class="in-segmented-control">
+            <a class="in-control-item" :class="{'in-active': controlItemId === 1}" @click="changeControlShow(1)">男性</a>
+            <a class="in-control-item" :class="{'in-active': controlItemId === 2}" @click="changeControlShow(2)">女性</a>
+            <a class="in-control-item" :class="{'in-active': controlItemId === 3}" @click="changeControlShow(3)">儿童</a>
+          </div>
+        </div>
+        <div>
+          <div id="item1" class="control-content" :class="{'control-content-active': controlItemId === 1}" @click="getParts(1)">
+            <div class="swiper-container" id="swiper-1">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide" @click="manclick">
+                  <div class="person-front" @click="onfront">
+                    <div class="m-head" @click="onfhead">
+                      <div class="m-big-head"></div>
+                      <div class="m-big-ear"></div>
+                      <div class="m-big-eyes"></div>
+                      <div class="m-big-nose"></div>
+                      <div class="m-big-mouth"></div>
+                    </div>
+                    <div class="m-face"></div>
+                    <div class="m-neck"></div>
+                    <div class="m-left-arm"></div>
+                    <div class="m-right-arm"></div>
+                    <div class="m-belly"></div>
+                    <div class="m-chest"></div>
+                    <div class="m-middle" ></div>
+                    <div class="m-left-leg"></div>
+                    <div class="m-right-leg"></div>
                   </div>
-                  <div class="m-face"></div>
-                  <div class="m-neck"></div>
-                  <div class="m-left-arm"></div>
-                  <div class="m-right-arm"></div>
-                  <div class="m-belly"></div>
-                  <div class="m-chest"></div>
-                  <div class="m-middle" ></div>
-                  <div class="m-left-leg"></div>
-                  <div class="m-right-leg"></div>
                 </div>
-              </div>
-              <div class="swiper-slide" @click="manclick">
-                <div class="person-back" @click="onback">
-                  <div class="m-back-neck"></div>
-                  <div class="m-back-left-arm"></div>
-                  <div class="m-back-right-arm"></div>
-                  <div class="m-back"></div>
-                  <div class="m-back-belly"></div>
-                  <div class="m-back-pelvis"></div>
-                  <div class="m-back-middle"></div>
-                  <div class="m-back-leg"></div>
+                <div class="swiper-slide" @click="manclick">
+                  <div class="person-back" @click="onback">
+                    <div class="m-back-neck"></div>
+                    <div class="m-back-left-arm"></div>
+                    <div class="m-back-right-arm"></div>
+                    <div class="m-back"></div>
+                    <div class="m-back-belly"></div>
+                    <div class="m-back-pelvis"></div>
+                    <div class="m-back-middle"></div>
+                    <div class="m-back-leg"></div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div id="item2" class="control-content" :class="{'control-content-active': controlItemId === 2}" @click="getParts(2)">
-          <div class="swiper-container" id="swiper-2">
-            <div class="swiper-wrapper">
-              <div class="swiper-slide" @click="womanclick">
-                <div class="female-front" @click="onfemale">
-                  <div class="f-head" @click="onghead">
-                    <div class="f-big-head"></div>
-                    <div class="f-big-face"></div>
-                    <div class="f-big-ear"></div>
-                    <div class="f-big-eyes"></div>
-                    <div class="f-big-nose"></div>
-                    <div class="f-big-mouth"></div>
+          <div id="item2" class="control-content" :class="{'control-content-active': controlItemId === 2}" @click="getParts(2)">
+            <div class="swiper-container" id="swiper-2">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide" @click="womanclick">
+                  <div class="female-front" @click="onfemale">
+                    <div class="f-head" @click="onghead">
+                      <div class="f-big-head"></div>
+                      <div class="f-big-face"></div>
+                      <div class="f-big-ear"></div>
+                      <div class="f-big-eyes"></div>
+                      <div class="f-big-nose"></div>
+                      <div class="f-big-mouth"></div>
+                    </div>
+                    <div class="f-face"></div>
+                    <div class="f-neck"></div>
+                    <div class="f-left-arm"></div>
+                    <div class="f-right-arm"></div>
+                    <div class="f-chest"></div>
+                    <div class="f-belly"></div>
+                    <div class="f-middle"></div>
+                    <div class="f-left-leg"></div>
+                    <div class="f-right-leg"></div>
                   </div>
-                  <div class="f-face"></div>
-                  <div class="f-neck"></div>
-                  <div class="f-left-arm"></div>
-                  <div class="f-right-arm"></div>
-                  <div class="f-chest"></div>
-                  <div class="f-belly"></div>
-                  <div class="f-middle"></div>
-                  <div class="f-left-leg"></div>
-                  <div class="f-right-leg"></div>
                 </div>
-              </div>
-              <div class="swiper-slide" @click="womanclick">
-                <div class="female-back" @click="onfback">
-                  <div class="f-back-left-arm"></div>
-                  <div class="f-back-right-arm"></div>
-                  <div class="f-back"></div>
-                  <div class="f-back-bone"></div>
-                  <div class="f-back-lion"></div>
-                  <div class="f-back-pelvis"></div>
-                  <div class="f-back-hip"></div>
-                  <div class="f-back-leg"></div>
+                <div class="swiper-slide" @click="womanclick">
+                  <div class="female-back" @click="onfback">
+                    <div class="f-back-left-arm"></div>
+                    <div class="f-back-right-arm"></div>
+                    <div class="f-back"></div>
+                    <div class="f-back-bone"></div>
+                    <div class="f-back-lion"></div>
+                    <div class="f-back-pelvis"></div>
+                    <div class="f-back-hip"></div>
+                    <div class="f-back-leg"></div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div id="item3" class="control-content" :class="{'control-content-active': controlItemId === 3}" @click="getParts(3)">
-          <div class="swiper-container" id="swiper-3">
-            <div class="swiper-wrapper">
-              <div class="swiper-slide" @click="childclick">
-                <div class="children-front" @click="oncmale">
-                  <div class="c-head" @click="onchead">
-                    <div class="c-big-head"></div>
-                    <div class="c-big-face"></div>
-                    <div class="c-big-ear"></div>
-                    <div class="c-big-eyes"></div>
-                    <div class="c-big-nose"></div>
-                    <div class="c-big-mouth"></div>
+          <div id="item3" class="control-content" :class="{'control-content-active': controlItemId === 3}" @click="getParts(3)">
+            <div class="swiper-container" id="swiper-3">
+              <div class="swiper-wrapper">
+                <div class="swiper-slide" @click="childclick">
+                  <div class="children-front" @click="oncmale">
+                    <div class="c-head" @click="onchead">
+                      <div class="c-big-head"></div>
+                      <div class="c-big-face"></div>
+                      <div class="c-big-ear"></div>
+                      <div class="c-big-eyes"></div>
+                      <div class="c-big-nose"></div>
+                      <div class="c-big-mouth"></div>
+                    </div>
+                    <div class="c-neck"></div>
+                    <div class="c-left-arm"></div>
+                    <div class="c-right-arm"></div>
+                    <div class="c-chest"></div>
+                    <div class="c-belly"></div>
+                    <div class="c-middle"></div>
+                    <div class="c-left-leg"></div>
+                    <div class="c-right-leg"></div>
                   </div>
-                  <div class="c-neck"></div>
-                  <div class="c-left-arm"></div>
-                  <div class="c-right-arm"></div>
-                  <div class="c-chest"></div>
-                  <div class="c-belly"></div>
-                  <div class="c-middle"></div>
-                  <div class="c-left-leg"></div>
-                  <div class="c-right-leg"></div>
                 </div>
-              </div>
-              <div class="swiper-slide" @click="childclick">
-                <div class="children-back" @click="oncback">
-                  <div class="c-back-bone"></div>
-                  <div class="c-back-arm"></div>
-                  <div class="c-back-arm-right"></div>
-                  <div class="c-back-buttocks"></div>
-                  <div class="c-back-loins"></div>
-                  <div class="c-back-leg"></div>
+                <div class="swiper-slide" @click="childclick">
+                  <div class="children-back" @click="oncback">
+                    <div class="c-back-bone"></div>
+                    <div class="c-back-arm"></div>
+                    <div class="c-back-arm-right"></div>
+                    <div class="c-back-buttocks"></div>
+                    <div class="c-back-loins"></div>
+                    <div class="c-back-leg"></div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="detailsDialogDiv" :style="{'display' : detailsDialogShow ? 'block' : 'none'}">
-      <div class="detailsDialog">
-        <div class="detailsDialog-con">
-          <div class="detailsDialog-body">
-            <div class="detailsDialog-card">
-              <div class="card-media">
-                <img src="./images/card_bg.jpg"/>
-                <div class="card-title-sub-title">
-                  <div class="card-title-sub-title-con">
-                    <div class="card-title">{{cardTitle}}</div>
-                    <div class="card-sub-title">疾病详情</div>
+      <div class="detailsDialogDiv" :style="{'display' : detailsDialogShow ? 'block' : 'none'}">
+        <div class="detailsDialog">
+          <div class="detailsDialog-con">
+            <div class="detailsDialog-body">
+              <div class="detailsDialog-card">
+                <div class="card-media">
+                  <img src="./images/card_bg.jpg"/>
+                  <div class="card-title-sub-title">
+                    <div class="card-title-sub-title-con">
+                      <div class="card-title">{{cardTitle}}</div>
+                      <div class="card-sub-title">疾病详情</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="card-content">
-                <div class="card-text">
-                  <div class="card-text-con">
-                    {{cardTextVal}}
+                <div class="card-content">
+                  <div class="card-text">
+                    <div class="card-text-con">
+                      {{cardTextVal}}
+                    </div>
                   </div>
-                </div>
-                <div class="card-actions">
-                  <a class="ask" :href="askUrl" target="_self">去问小智</a>
-                  <a class="goDepartment">相关科室</a>
+                  <div class="card-actions">
+                    <span class="ask" @click="goAsk">去问小智</span>
+                    <a class="goDepartment">相关科室</a>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div
-            class="detailsDialog-action"
-            @click="closeDetailsDialog"
-          >
-            <span>关闭</span>
+            <div
+              class="detailsDialog-action"
+              @click="closeDetailsDialog"
+            >
+              <span>关闭</span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
   <script type="application/javascript" src="js/3.5.1.jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script src="https://unpkg.com/swiper/swiper-bundle.js"> </script>
+  <script src="js/vue@2.6.12.js"></script>
+  <script src="js/axios.min.js"></script>
+  <script src="js/swiper-bundle.js"> </script>
+  <script src="js/swiper.animate1.0.3.min.js"></script>
   <script>
     $(function () {
+      let now = new Date()
+      // let time = `${now.getHours()}:${now.getMinutes()}`
+      let time = `${now.getHours()}`.length === 2 ? (`${now.getMinutes()}`.length === 2?`${now.getHours()}
+ :${now.getMinutes()}` : `${now.getHours()}:0${now.getMinutes()}`)
+        :(`${now.getMinutes()}`.length === 2 ? `0${now.getHours()}:${now.getMinutes()}`:`0${now.getHours()}:0${now.getMinutes()}`)
       const url = 'http://122.112.148.65:9005'
       const url1 = 'http://122.112.148.65:9004'
       let vm = new Vue({
-        el: '#intelligent',
+        el: '#dialogIntelligent',
         data: {
+          ss: false,
+          messageList_x: [], // 当前聊天记录
+          messageVal: '', // 聊天值
+          num: 0,
+          userData: {
+            self: {
+              "_id": 0,
+              "avatar": "/static/images/patient.png",
+              "name": "不忘初心"
+            },
+            friend: {
+              "_id": 1,
+              "avatar": "/static/images/p.png",
+              "name": "智杰小智"
+            }
+          },
+          guidanceShow: false, // 导诊提示显示/隐藏
+          ifSelf: false,
+          timerInput: '',
+          dialogOrintelligentShow: true,
           controlItemId: 1, // 1(男性), 2(女性), 3(儿童)
           part_data: [],
           part_code: '',
@@ -242,59 +329,207 @@
           page: 1,
           page_size: 0,
           ifSearchData: false,
-          dialogShow: false,
           dialogName: '',
           cardTitle: '',
           cardTextVal: '',
           detailsDialogShow: false,
-          askUrl: '../dialogIntelligent/dialogIntelligent.html'
+          askQuestion: ''
         },
         created() {
+          this.initStorge()
           this.getParts(1)
           this.phoneFlag()
         },
-        mounted(){
-          let swiper = new Swiper('#swiper-1', {
-            effect: 'cube',
-            grabCursor: true,
-            cubeEffect: {
-              shadow: false,
-            },
-            observer: true,
-            observeParents: true,
-            navigation: {
-              nextEl: '.swiper-button-next',
-              prevEl: '.swiper-button-prev',
-            }
-          });
-          let swipers = new Swiper('#swiper-2', {
-            effect: 'cube',
-            grabCursor: true,
-            cubeEffect: {
-              shadow: false,
-            },
-            observer: true,
-            observeParents: true,
-            navigation: {
-              nextEl: '.swiper-button-next',
-              prevEl: '.swiper-button-prev',
-            }
-          });
-          let swiperse = new Swiper('#swiper-3', {
-            effect: 'cube',
-            grabCursor: true,
-            cubeEffect: {
-              shadow: false,
-            },
-            observer: true,
-            observeParents: true,
-            navigation: {
-              nextEl: '.swiper-button-next',
-              prevEl: '.swiper-button-prev',
-            }
-          });
+        mounted() {
+          this.nowMessageList()
+          setTimeout(() => {
+            let swiper = new Swiper('#swiper-1', {
+              effect: 'cube',
+              grabCursor: true,
+              cubeEffect: {
+                shadow: false,
+              },
+              observer: true,
+              observeParents: true,
+              navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+              }
+            });
+            let swipers = new Swiper('#swiper-2', {
+              effect: 'cube',
+              grabCursor: true,
+              cubeEffect: {
+                shadow: false,
+              },
+              observer: true,
+              observeParents: true,
+              navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+              }
+            });
+            let swiperse = new Swiper('#swiper-3', {
+              effect: 'cube',
+              grabCursor: true,
+              cubeEffect: {
+                shadow: false,
+              },
+              observer: true,
+              observeParents: true,
+              navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+              }
+            });
+          })
         },
         methods: {
+          goBackDialog() {
+            this.dialogOrintelligentShow = true
+            this.$nextTick(() => {
+              $(document).scrollTop($("#dialogueItem").height())
+            }, 100)
+          },
+          goAsk() {
+            this.dialogOrintelligentShow = true
+            this.messageVal = this.askQuestion
+            this.sendValue()
+          },
+          guidanceGo() {
+            this.dialogOrintelligentShow = false
+            this.detailsDialogShow = false
+            this.$nextTick(() => {
+              $(document).scrollTop(0)
+            })
+          },
+          initStorge() {
+            // 初始化一些常用数据，根据vue的理念，使用到的数据都必须先进行初始化设置。
+            let state = {
+              // 初始化基础数据
+              data: {self: {}, friends: []},
+              // ajax请求数据是否结束
+              isAjax: false,
+              // 当前被选中或者在聊天中的friend的_id
+              activeId: 1,
+              // 聊天队列，这里为每个朋友添加了一个聊天队列，偷懒写法，如果有需要可以改成动态添加
+              // _id是作为聊天队列的标记，list是聊天内容，list里的数据格式{_id:xx, message:xxx},组件内会根据_id来将对话插入
+              // 到左边，还是右边，判断message是自己还是ai发出的
+              messageList: [
+                {
+                  _id: 1,
+                  list: [{_id: 1, message: '你好,我是小智,欢迎您进行咨询,咨询方式可以参考以下内容:', time: time, help_question: ['咳嗽用药', '咳嗽的症状', '头痛忌口']}],
+                }
+              ]
+            }
+            localStorage.setItem('vue-chat-session', JSON.stringify(state));
+          },
+          // 对当前消息队列中的消息进行加工，添加对应的好友资料
+          nowMessageList() {
+            let message = localStorage.getItem('vue-chat-session');
+            let messObj = JSON.parse(message);
+            let list = messObj.messageList;
+            if(typeof(list[0].list) === "undefined" || list[0].list === null){
+              list[0].list = [{"_id":1,"message":"你好,我是小智,欢迎您进行咨询,咨询方式可以参考以下内容:","time":time,"help_question":["咳嗽用药","咳嗽的症状","头痛忌口"]}]
+            }
+            let messageData = list[0].list
+            for(let i = 0; i < messageData.length;i++){
+              if(typeof(messageData[i].more_question) != "undefined"){
+                messageData[i].more = true
+                messageData[i].less = false
+                messageData[i].question = []
+              }
+            }
+            this.messageList_x = messageData
+          },
+          sendValue() {
+            const options = {
+              self: true,
+              _id: this.userData.friend._id,
+              message: this.messageVal
+            }
+            this.changeList(options)
+            this.sendValue2(options)
+          },
+          sendValueObject(val) {
+            const options = {
+              self: true,
+              _id: this.userData.friend._id,
+              message: val
+            }
+            this.changeList(options)
+            this.sendValue2(options)
+          },
+          sendValue2(options) {
+            this.num = 1
+            if (options.message) {
+              axios.get('http://122.112.148.65:9004/qaRequest', {
+                params: {
+                  question: options.message
+                }
+              })
+                .then((res) => {
+                  let _id = 1
+                  let robotData = res.data
+                  let len = robotData.help_question.length
+                  let help_question = []
+                  let more_question = []
+                  let question = []
+                  let message = ''
+                  if(robotData.final_answers instanceof Array){
+                    message = robotData.final_answers [0]
+                  }else{
+                    message = robotData.final_answers
+                  }
+                  if(len>5){
+                    for(let i = 0; i<len;i++){
+                      if(i<5){
+                        help_question.push(robotData.help_question[i])
+                      }else{
+                        more_question.push(robotData.help_question[i])
+                      }
+                    }
+                    this.changeList({ _id, message: message ,help_question:help_question,more_question:more_question,question:question,more:true,less:false})
+                  }else{
+                    this.changeList({ _id, message: message ,help_question:robotData.help_question,more:false,less:false})
+                  }
+                  this.messageVal = ''
+                })
+            }
+          },
+          changeList(obj) {
+            const storageVal = JSON.parse(localStorage.getItem('vue-chat-session'))
+            const messageList = storageVal.messageList
+            // 判断信息是自己的还是ai的，然后插入聊天队列中
+            if (obj.self) {
+              // 信息是自己发送的
+              for(let i = 0; i< messageList.length ;i++){
+                obj._id = 0
+                messageList[i].list.push({ ...obj, time })
+              }
+            } else {
+              // 信息是ai发送的
+              for(let i = 0; i<messageList.length ;i++){
+                messageList[i].list.push({ ...obj, time })
+              }
+            }
+            localStorage.setItem('vue-chat-session', JSON.stringify(storageVal))
+            this.nowMessageList()
+          },
+          changeGuidanceShow(flag) {
+            this.guidanceShow = flag
+          },
+          // 输入框获得焦点时触发
+          footerFocus() {
+            this.timerInput = setInterval(() => {
+              // 完美解决输入框被软键盘遮挡
+              this.$refs.footer.scrollIntoView(false)
+            }, 200)
+          },
+          footerBlur() {
+            // 输入框失去焦点时清除定时器
+            clearInterval(this.timerInput)
+          },
           phoneFlag() {
             let ua = navigator.userAgent.toLowerCase();
             let isAndroid = ua.indexOf('android') > -1;
@@ -1082,7 +1317,7 @@
               this.tapHide()
               this.detailsDialogShow = true
               this.cardTitle = name
-              this.askUrl = this.askUrl + '?question=' + encodeURI(encodeURI(name))
+              this.askQuestion = name
               if(res.data.final_answers instanceof Array){
                 this.cardTextVal = res.data.final_answers[0]
               }else{
@@ -1097,6 +1332,13 @@
             this.detailsDialogShow = false
             this.cardTitle = ''
             this.cardTextVal = ''
+          }
+        },
+        watch: {
+          messageList_x() {
+            this.$nextTick(() => {
+              $(document).scrollTop($("#dialogueItem").height())
+            })
           }
         }
       })

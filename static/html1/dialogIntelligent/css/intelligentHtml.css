@@ -1,0 +1,733 @@
+a, li{
+  list-style: none;
+  text-decoration: none;
+}
+body{
+  overflow-x: hidden;
+  padding: 0;
+  margin: 0;
+}
+html{
+  padding: 0;
+  margin: 0;
+}
+.intelligent{
+  z-index: 999;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #f4f4f6;
+}
+.intelligentStyle{
+  overflow: hidden;
+}
+.intelligent-header{
+  box-shadow: 10px 10px 10px rgba(0,0,0,0.1);
+  width: 100%;
+  height: 45px;
+  background: #fff;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  z-index: 100;
+}
+
+.intelligent-header .span-title{
+  top: 10px;
+  left: 49%;
+  transform: translateX(-49%);
+  position: absolute;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.in-content{
+  background: transparent;
+  width:100%;
+  height: 700px;
+  position:relative;
+  transition:all 0.25s;
+}
+.in-segmented-control{
+  font-size: 15px;
+  font-weight: 400;
+  position: relative;
+  display: table;
+  overflow: hidden;
+  width: 100%;
+  table-layout: fixed;
+  border: 1px solid #007aff;
+  border-radius: 3px;
+  background-color: transparent;
+  -webkit-touch-callout: none;
+}
+.in-segmented-control .in-control-item{
+  line-height: 38px;
+  display: table-cell;
+  overflow: hidden;
+  width: 1%;
+  -webkit-transition: background-color .1s linear;
+  transition: background-color .1s linear;
+  text-align: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #007aff;
+  border-color: #007aff;
+  border-left: 1px solid #007aff;
+  text-decoration: none;
+}
+.in-segmented-control .in-control-item:first-child {
+  border-left-width: 0;
+}
+.in-segmented-control .in-control-item.in-active {
+  color: #fff;
+  background-color: #007aff;
+}
+.female-front,.female-back,.children-front,.children-back{
+  width:300px;
+  height:636px;
+  position:relative;
+  margin:0 auto;
+}
+.person-front,.person-back{
+  width: 270px;
+  height: 636px;
+  position: relative;
+  margin: 0 auto;
+}
+.person-front{
+  background: url("../images/man.png") no-repeat;
+  background-size: contain;
+}
+.person-back{
+  background: url("../images/man_back.png") no-repeat;
+  background-size: contain;
+}
+.female-front{
+  background: url("../images/woman.png") no-repeat;
+  background-size: contain;
+}
+.female-back{
+  background: url("../images/woman_back.png") no-repeat;
+  background-size: contain;
+}
+.children-front{
+  background: url("../images/child.png") no-repeat;
+  background-size: contain;
+}
+.children-back{
+  background: url("../images/child_back.png") no-repeat;
+  background-size: contain;
+}
+.control-content{
+  position: relative;
+  display: none;
+}
+.control-content.control-content-active{
+  display: block;
+}
+.m-head,.m-face,.m-neck,.m-left-arm,.m-right-arm,.m-belly,.m-chest,.m-middle,.m-left-leg,.m-right-leg,.m-back-neck,.m-back-left-arm,.m-back-right-arm,.m-back,.m-back-belly,.m-back-pelvis,.m-back-middle,.m-big-head,.m-big-face,.m-big-ear,.m-big-eyes,.m-big-nose,.m-big-mouth,.m-back-leg{
+  width: 270px;
+  height: 600px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: none;
+}
+.m-head{
+  background: url("../images/diagnos_man_big_head.png");
+  background-size: contain;
+  z-index:1;
+}
+.m-face{
+  background: url("../images/diagnose_man_face.png");
+  background-size: contain;
+  z-index:2;
+}
+.m-neck{
+  background: url("../images/diagnose_man_neck.png");
+  background-size: contain;
+  z-index:3;
+}
+.m-left-arm{
+  background: url("../images/diagnose_man_left_arm.png");
+  background-size: contain;
+  z-index:4;
+}
+.m-right-arm{
+  background: url("../images/diagnose_man_right_arm.png");
+  background-size: contain;
+  z-index:5;
+}
+.m-chest{
+  background: url("../images/diagnose_man_chest.png");
+  background-size: contain;
+  z-index:6;
+}
+.m-belly{
+  background: url("../images/diagnose_man_belly.png");
+  background-size: contain;
+  z-index:7;
+}
+.m-middle{
+  background: url("../images/diagnose_man_middle.png");
+  background-size: contain;
+  z-index:8;
+}
+.m-left-leg{
+  background: url("../images/diagnose_man_left_leg.png");
+  background-size: contain;
+  z-index:9;
+}
+.m-right-leg{
+  background: url("../images/diagnose_man_right_leg.png");
+  background-size: contain;
+  z-index:10;
+}
+.m-back-neck{
+  background: url("../images/diagnose_man_back_neck.png");
+  background-size: contain;
+  z-index:1;
+}
+.m-back-left-arm{
+  background: url("../images/diagnose_man_back_left_arm.png");
+  background-size: contain;
+  z-index:2;
+}
+.m-back-right-arm{
+  background: url("../images/diagnose_man_back_right_arm.png");
+  background-size: contain;
+  z-index:2;
+}
+.m-back{
+  background: url("../images/diagnose_man__back.png");
+  background-size: contain;
+  z-index:3;
+}
+.m-back-belly{
+  background: url("../images/diagnose_man_back_belly.png");
+  background-size: contain;
+  z-index:4;
+}
+.m-back-pelvis{
+  background: url("../images/diagnose_man_back_pelvis.png");
+  background-size: contain;
+  z-index:5;
+}
+.m-back-middle{
+  background: url("../images/diagnose_man_back_middle.png");
+  background-size: contain;
+  z-index:6;
+}
+.m-back-leg{
+  background: url("../images/diagnose_man_back_legs.png");
+  background-size: contain;
+  z-index:6;
+}
+.m-big-head{
+  background: url("../images/diagnose_man_big_top.png");
+  background-size: contain;
+  z-index:9;
+}
+.m-big-face{
+  background: url("../images/diagnose_man_big_face.png");
+  background-size: contain;
+  z-index:10;
+}
+.m-big-ear{
+  background: url("../images/diagnose_man_ear.png");
+  background-size: contain;
+  z-index:11;
+}
+.m-big-eyes{
+  background: url("../images/diagnose_man_eyes.png");
+  background-size: contain;
+  z-index:11;
+}
+.m-big-nose{
+  background: url("../images/diagnose_man_nose.png");
+  background-size: contain;
+  z-index:11;
+}
+.m-big-mouth{
+  background: url("../images/diagnose_man_mouth.png");
+  background-size: contain;
+  z-index:11;
+}
+.f-head,.f-face,.f-neck,.f-left-arm,.f-right-arm,.f-chest,.f-belly,.f-middle,.f-left-leg,.f-right-leg,.f-back-left-arm,.f-back-right-arm,.f-back,.f-back-bone,.f-back-lion,.f-back-pelvis,.f-back-hip,.f-back-leg,.f-big-head,.f-big-face,.f-big-ear,.f-big-eyes,.f-big-nose,.f-big-mouth{
+  width:300px;
+  height:550px;
+  position:absolute;
+  left:0;
+  top:0;
+  display:none;
+}
+.f-head{
+  background: url("../images/woman_big_head.png");
+  background-size: contain;
+  z-index:1;
+}
+.f-face{
+  background: url("../images/diagnose_woman_face.png");
+  background-size: contain;
+  z-index:2;
+}
+.f-neck{
+  background: url("../images/diagnose_woman_neck.png");
+  background-size: contain;
+  z-index:3;
+}
+.f-left-arm{
+  background: url("../images/diagnose_woman_leftarm.png");
+  background-size: contain;
+  z-index:4;
+}
+.f-right-arm{
+  background: url("../images/diagnose_woman_right_arm.png");
+  background-size: contain;
+  z-index:5;
+}
+.f-chest{
+  background: url("../images/diagnose_woman_chest.png");
+  background-size: contain;
+  z-index:6;
+}
+.f-belly{
+  background: url("../images/diagnose_woman_belly.png");
+  background-size: contain;
+  z-index:7;
+}
+.f-middle{
+  background: url("../images/diagnose_woman_middle.png");
+  background-size: contain;
+  z-index:8;
+}
+.f-left-leg{
+  background: url("../images/diagnose_woman_left_leg.png");
+  background-size: contain;
+  z-index:9;
+}
+.f-right-leg{
+  background: url("../images/diagnose_woman_right_leg.png");
+  background-size: contain;
+  z-index:10;
+}
+.f-back-left-arm{
+  background: url("../images/diagnose_woman_back_left_arm.png");
+  background-size: contain;
+  z-index:1;
+}
+.f-back-right-arm{
+  background: url("../images/diagnose_woman_back_right-arm.png");
+  background-size: contain;
+  z-index:1;
+}
+.f-back{
+  background: url("../images/diagnose_woman_back.png");
+  background-size: contain;
+  z-index:2;
+}
+.f-back-bone{
+  background: url("../images/diagnose_woman_bone.png");
+  background-size: contain;
+  z-index:3;
+}
+.f-back-lion{
+  background: url("../images/diagnose_woman_lion.png");
+  background-size: contain;
+  z-index:4;
+}
+.f-back-pelvis{
+  background: url("../images/diagnose_woman_pelvis.png");
+  background-size: contain;
+  z-index:5;
+}
+.f-back-hip{
+  background: url("../images/diagnose_woman_hip.png");
+  background-size: contain;
+  z-index:6;
+}
+.f-back-leg{
+  background: url("../images/diagnose_woman_back_legs.png");
+  background-size: contain;
+  z-index:6;
+}
+.f-big-head{
+  background: url("../images/diagnose_woman_big_top.png");
+  background-size: contain;
+  z-index:9;
+}
+.f-big-face{
+  background: url("../images/diagnose_woman_big_face.png");
+  background-size: contain;
+  z-index:10;
+}
+.f-big-ear{
+  background: url("../images/diagnose_woman_big_ear.png");
+  background-size: contain;
+  z-index:11;
+}
+.f-big-eyes{
+  background: url("../images/diagnose_woman_big_eyes.png");
+  background-size: contain;
+  z-index:11;
+}
+.f-big-nose{
+  background: url("../images/diagnose_woman_big_nose.png");
+  background-size: contain;
+  z-index:11;
+}
+.f-big-mouth{
+  background: url("../images/diagnose_woman_big_mouth.png");
+  background-size: contain;
+  z-index:11;
+}
+.c-neck,.c-head,.c-left-arm,.c-right-arm,.c-chest,.c-belly,.c-middle,.c-right-leg,.c-left-leg,.c-big-head,.c-big-face,.c-big-ear,.c-big-eyes,.c-big-nose,.c-big-mouth,.c-back-bone,.c-back-arm,.c-back-arm-right,.c-back-buttocks,.c-back-loins,.c-back-leg{
+  width:300px;
+  height:636px;
+  position:absolute;
+  left:0;
+  top:0;
+  display:none;
+}
+.c-head{
+  background: url("../images/child_big_head.png");
+  background-size: contain;
+  z-index:1;
+}
+.c-neck{
+  background: url("../images/diagnose_child_neck.png");
+  background-size: contain;
+  z-index:2;
+}
+.c-left-arm{
+  background: url("../images/diagnose_child_right_arm.png");
+  background-size: contain;
+  z-index:3;
+}
+.c-right-arm{
+  background: url("../images/diagnose_child_left_arm.png");
+  background-size: contain;
+  z-index:4;
+}
+.c-chest{
+  background: url("../images/diagnose_child_chest.png");
+  background-size: contain;
+  z-index:5;
+}
+.c-belly{
+  background: url("../images/diagnose_child_belly.png");
+  background-size: contain;
+  z-index:6;
+}
+.c-middle{
+  background: url("../images/diagnose_child_middle.png");
+  background-size: contain;
+  z-index:7;
+}
+.c-left-leg{
+  background: url("../images/diagnose_child_right_leg.png");
+  background-size: contain;
+  z-index:8;
+}
+.c-right-leg{
+  background: url("../images/diagnose_child_left_leg.png");
+  background-size: contain;
+  z-index:9;
+}
+.c-big-head{
+  background: url("../images/diagnose_child_big_head_select.png");
+  background-size: contain;
+  z-index:10;
+}
+.c-big-face{
+  background: url("../images/diagnose_child_big_face_select.png");
+  background-size: contain;
+  z-index:11;
+}
+.c-big-ear{
+  background: url("../images/diagnose_child_big_ear_select.png");
+  background-size: contain;
+  z-index:11;
+}
+.c-big-eyes{
+  background: url("../images/diagnose_child_big_eyes_select.png");
+  background-size: contain;
+  z-index:11;
+}
+.c-big-nose{
+  background: url("../images/diagnose_child_big_nose_select.png");
+  background-size: contain;
+  z-index:11;
+}
+.c-big-mouth{
+  background: url("../images/diagnose_child_big_mouth_select.png");
+  background-size: contain;
+  z-index:11;
+}
+.c-back-bone{
+  background: url("../images/diagnose_child_back.png");
+  background-size: contain;
+  z-index:13;
+}
+.c-back-arm{
+  background: url("../images/diagnose_child_back_left_arm.png");
+  background-size: contain;
+  z-index:12;
+}
+.c-back-arm-right{
+  background: url("../images/diagnose_child_back_right-arms_select.png");
+  background-size: contain;
+  z-index:12;
+}
+.c-back-buttocks{
+  background: url("../images/diagnose_child_back_buttocks_select.png");
+  background-size: contain;
+  z-index:12;
+}
+.c-back-loins{
+  background: url("../images/diagnose_child_back_loins_select.png");
+  background-size: contain;
+  z-index:12;
+}
+.c-back-leg{
+  background: url("../images/diagnose_child_back_legs_select.png");
+  background-size: contain;
+  z-index:12;
+}
+
+.sidenav{
+  position:absolute;
+  top:0;
+  left:0;
+  bottom:0;
+  width:0;
+  background: #323c3c;
+  transition: all 0.25s;
+  overflow: hidden;
+  color:#eee;
+  font-size:14px;
+}
+.sidenav-left{
+  display:block;
+  float:left;
+  width:29vw;
+  height:100%;
+  overflow-x: hidden;
+}
+.sidenav-left > .title{
+  position: relative;
+  padding: 35px 10px;
+  overflow: hidden;
+}
+
+.iu-table-view{
+  position: relative;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 0;
+  list-style: none;
+  background: transparent;
+}
+
+.iu-table-view-inverted:before{
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  content: '';
+  -webkit-transform: scaleY(.5);
+  transform: scaleY(.5);
+  background-color: #2c2c2d;
+}
+
+.iu-table-view-cell{
+  position: relative;
+  overflow: hidden;
+  padding: 11px 0 11px 15px;
+  -webkit-touch-callout: none;
+  border-bottom: 1px solid #2c3535;
+}
+.iu-table-view-cell > span{
+  width: 104px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  margin: -11px -15px;
+  padding: inherit;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: inherit;
+}
+
+.iu-table-view-cell-span > i{
+  position: absolute;
+  right: 12px;
+  width: 15px;
+  height: 15px;
+  display: block;
+  background: url("../images/right.png") 0 0 no-repeat;
+  background-size: 100%;
+}
+.iu-table-view-ui{
+  padding-left: 0;
+  color: #ddd;
+}
+.sidenav-right{
+  overflow-x: hidden;
+  display: block;
+  float: right;
+  width: 41vw;
+  height:100%;
+  background: #2c3535;
+}
+.bar{
+  z-index:9999;
+  position: absolute;
+}
+.bar .find-disease{
+  background:#fff no-repeat 10px 10px;
+  background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyBpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBXaW5kb3dzIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkU5NEY0RTlFMTA4NzExRTM5RTEzQkFBQzMyRjkyQzVBIiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkU5NEY0RTlGMTA4NzExRTM5RTEzQkFBQzMyRjkyQzVBIj4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6RTk0RjRFOUMxMDg3MTFFMzlFMTNCQUFDMzJGOTJDNUEiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6RTk0RjRFOUQxMDg3MTFFMzlFMTNCQUFDMzJGOTJDNUEiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4DjA/RAAABK0lEQVR42pTSQUdEURjG8dOY0TqmPkGmRcqYD9CmzZAWJRHVRIa0iFYtM6uofYaiEW2SRJtEi9YxIklp07ZkWswu0v/wnByve7vm5ee8M+85zz1jbt9Os+WiGkYdYxjCOx5wgFeXUHmtBSzpcCGa+5BJTCjEP+0nKWAT8xqe4ArPGEEVC1hHEbs2oBwdXkM7mj/JLZrad437sCGHOfUtcziutuYu2v8XUFF/4f6vMK/YgAH1HxkBYV60AR31gxkBYd6xAeF3VzMCwvzOBpypX8V4yuFRzX2d2gD/l5yjH4fYQEnzkj4fae5rJulF2sMXVrAsaTWttRFu4Osb+1jEDT71/ZveyhouTch2fINQL9hKefKjuYFfuznXWzXMTabyrvfyIV3M4vhXgAEAUMs7K0J9UJAAAAAASUVORK5CYII=);
+  border: none;
+  width: 100%;
+  line-height: 19px;
+  padding: 11px 0;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px #c4c4c4 inset;
+  text-align: left;
+  font-size: 14px;
+  font-family: inherit;
+  color: #738289;
+  font-weight: bold;
+  outline: none;
+  text-indent: 40px;
+}
+.search-item{
+  position: relative;
+  top: 8%;
+  text-align: center;
+}
+.page-item{
+  position: relative;
+  top: 8%;
+  text-align: center;
+}
+.dis-data{
+  position: relative;
+  top: 8%;
+}
+.detailsDialogDiv{
+  display: none;
+}
+.detailsDialog{
+  background-color: rgba(0, 0, 0, 0.4);
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 20141243;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.detailsDialog-con{
+  width: 75%;
+  max-width: 768px;
+  padding: 0;
+  background-color: #fff;
+  border-radius: 2px;
+  font-size: 16px;
+  box-shadow: 0 19px 60px rgba(0,0,0,.298039), 0 15px 20px rgba(0,0,0,.219608);
+}
+
+.detailsDialog-body{
+  color: rgba(0, 0, 0, 0.6);
+  padding: 24px 24px 20px;
+  overflow: hidden;
+}
+.detailsDialog-card{
+  background-color: #fff;
+  position: relative;
+  border-radius: 2px;
+  box-shadow: 0 1px 6px rgba(0,0,0,.117647), 0 1px 4px rgba(0,0,0,.117647);
+}
+.card-media{
+  position: relative;
+}
+.card-media > img{
+  width: 100%;
+  max-width: 100%;
+  min-width: 100%;
+  display: block;
+  vertical-align: top;
+}
+.card-title-sub-title{
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.54);
+}
+.card-title-sub-title-con{
+  padding: 16px;
+}
+.card-title{
+  font-size: 24px;
+  color: rgba(255, 255, 255, 0.87);
+  line-height: 36px;
+}
+.card-sub-title{
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.54);
+}
+.card-text{
+  padding: 16px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.87);
+  overflow-y: auto;
+}
+.card-text-con{
+  border: 0;
+  border-radius: 5px;
+  width: 100%;
+  height: 200px;
+  font-size: 14px;
+}
+.card-actions{
+  padding: 8px;
+  position: relative;
+}
+.card-actions > .ask, .card-actions > .goDepartment{
+  overflow: hidden;
+  position: relative;
+  border-radius: 2px;
+  height: 36px;
+  line-height: 36px;
+  min-width: 88px;
+  color: rgba(0, 0, 0, 0.87);;
+}
+.card-actions > .goDepartment{
+  margin-left: 30px;
+}
+.detailsDialog-action{
+  height: 48px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.detailsDialog-action > span{
+  display: inline-block;
+  overflow: hidden;
+  position: relative;
+  border-radius: 2px;
+  height: 36px;
+  line-height: 36px;
+  min-width: 88px;
+  color: #2196f3;
+}
